@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.0.1...v0.0.2) (2023-12-07)
+
+
+### Bug Fixes
+
+* **listener:** change cache directory ([e8622fa](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/e8622fa65333e57ced39c7093f11d08465b20255))
+
 ## 0.0.1 (2023-12-07)
 
 
