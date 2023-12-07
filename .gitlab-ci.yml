@@ -10,6 +10,7 @@ include:
       - "jobs/lint-commit-messages.yaml"
       - "jobs/semantic-release-env.yaml"
       - "jobs/container-build.yaml"
+      - "jobs/package-and-publish-helm-charts.yaml"
 
 .build-matrix: &build-matrix
   - IMAGE_NAME:
@@ -37,3 +38,7 @@ publish-images:
   extends: .push-image-souvap
   parallel:
     matrix: *build-matrix
+
+publish-helm-charts-souvap:
+  extends: .publish-helm-charts-souvap
+...

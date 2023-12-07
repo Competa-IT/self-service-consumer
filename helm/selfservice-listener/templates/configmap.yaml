@@ -1,0 +1,31 @@
+---
+{{ include "common.configMap" (dict "top" . "overrides" "selfservice-listener.configMap") }}
+
+{{- define "selfservice-listener.configMap" }}
+{{- with .top.Values.selfserviceListener }}
+data:
+  CA_CERT: "{{ .caCert }}"
+  CA_CERT_FILE: "{{ .caCertFile }}"
+  DEBUG_LEVEL: "{{ .debugLevel }}"
+  ENVIRONMENT: "{{ .environment }}"
+  LDAP_BASE_DN: "{{ .ldapBaseDn }}"
+  LDAP_PASSWORD: "{{ .ldapPassword }}"
+  LDAP_PASSWORD_FILE: "{{ .ldapPasswordFile }}"
+  LDAP_HOST: "{{ .ldapHost }}"
+  LDAP_HOST_DN: "{{ .ldapHostDn }}"
+  LDAP_PORT: "{{ .ldapPort }}"
+  NOTIFIER_SERVER: "{{ default .ldapHost .notifierServer }}"
+  TLS_MODE: "{{ .tlsMode }}"
+  wait-for-ldap.sh: |
+    #!/bin/bash
+    set -euxo pipefail
+
+    while ! ldapsearch -H ldap://$LDAP_HOST -D $LDAP_HOST_DN -y $LDAP_PASSWORD_FILE -b "" -s base -LLL; do
+      echo "Checking if LDAP Server can be reached..."
+      sleep 2
+    done
+
+    echo "Success, the LDAP Server is available"
+{{ end }}
+{{ end }}
+...

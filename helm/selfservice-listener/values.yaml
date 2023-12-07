@@ -1,0 +1,95 @@
+---
+
+## Global values
+affinity: {}
+environment: {}
+fullnameOverride: ""
+nameOverride: ""
+nodeSelector: {}
+podAnnotations: {}
+podSecurityContext: {}
+replicaCount: 1
+securityContext: {}
+tolerations: []
+
+selfserviceListener:
+  environment: "production"
+  # -- CA root certificate, base64-encoded. Optional; will be written to "caCertFile" if set.
+  caCert: ""
+  # -- Where to search for the CA Certificate file.
+  caCertFile: "/run/secrets/ca_cert"
+  certPem: ""
+  debugLevel: "4"
+  ldapBaseDn: null
+  # -- LDAP password for `cn=admin`. Will be written to "ldapPasswordFile" if set.
+  ldapPassword: null
+  # -- The path to the "ldapPasswordFile" docker secret or a plain file
+  ldapPasswordFile: "/var/secrets/ldap_secret"
+  ldapHost: "ucs-machine"
+  ldapHostDn: null
+  # -- Will add a mapping from "ldapHost" to "ldapHostIp" into "/etc/hosts" if set
+  ldapPort: "389"
+  # -- Defaults to "ldapHost" if not set.
+  notifierServer: null
+  # -- Whether to start encryption and validate certificates.
+  # Chose from "off", "unvalidated" and "secure".
+  tlsMode: "secure"
+
+image:
+  imagePullPolicy: "Always"
+  imagePullSecrets: []
+  registry: "gitregistry.knut.univention.de"
+  repository: "univention/customers/dataport/upx/selfservice-listener/selfservice-listener"
+  tag: "latest"
+  # -- Define image sha256 as an alternative to `tag`
+  sha256: null
+
+  waitForDependency:
+  registry: "gitregistry.knut.univention.de"
+  repository: "univention/components/univention-portal/wait-for-dependency"
+  imagePullPolicy: "Always"
+  tag: "latest"
+  ## Define image sha256 as an alternative to `tag`
+  # sha256:
+
+## Container deployment probes
+probes:
+  liveness:
+    enabled: true
+    initialDelaySeconds: 120
+    timeoutSeconds: 3
+    periodSeconds: 30
+    failureThreshold: 3
+    successThreshold: 1
+
+  readiness:
+    enabled: true
+    initialDelaySeconds: 30
+    timeoutSeconds: 3
+    periodSeconds: 15
+    failureThreshold: 30
+    successThreshold: 1
+
+# -- Deployment resources for the listener container
+resources: {}
+  # requests:
+  #   memory: "512Mi"
+  #   cpu: "250m"
+  # limits:
+  #   memory: "4Gi"
+  #   cpu: "4"
+
+# -- Deployment resources for the dependency waiters
+resourcesWaitForDependency: {}
+
+
+autoscaling:
+  enabled: false
+
+
+persistence:
+  data:
+    storageClass: ""
+    size: "1Gi"
+
+...
