@@ -17,8 +17,8 @@ persistant volume).
 ##### Email Trigger Service
 
 This component watches the shared directory and triggers the UMC command
-`passwordreset/send_token` when the user has `univentionPasswordSelfServiceEmail`
-set. Then UMC sends the email to the user.
+`passwordreset/send_token` when the user has objectClass
+`univentionPasswordSelfServiceEmail`. Then UMC sends the email to the user.
 
 ## Architecture
 
