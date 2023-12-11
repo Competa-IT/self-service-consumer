@@ -33,7 +33,7 @@ spec:
         - name: '{{ .Chart.Name }}'
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: '{{ if .Values.image.registry }}{{ .Values.image.registry }}/{{ end }}{{ .Values.image.repository }}{{ if .Values.image.sha256 }}@sha256:{{ .Values.image.sha256 }}{{ else }}:{{ .Values.image.tag }}{{ end }}'
+          image: '{{ if .Values.image.selfserviceListener.registry }}{{ .Values.image.selfserviceListener.registry }}/{{ end }}{{ .Values.image.selfserviceListener.repository }}{{ if .Values.image.selfserviceListener.sha256 }}@sha256:{{ .Values.image.selfserviceListener.sha256 }}{{ else }}:{{ .Values.image.selfserviceListener.tag }}{{ end }}'
           imagePullPolicy: '{{ .Values.image.pullPolicy }}'
           envFrom:
             - configMapRef:
@@ -43,6 +43,23 @@ spec:
               mountPath: "/var/secrets"
             - name: "data"
               mountPath: "/var/lib/univention-directory-listener"
+            - name: "shared"
+              mountPath: "/var/cache/listener"
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+        - name: '{{ .Chart.Name }}-invitation'
+          # command: ["/bin/bash"]
+          # args: [sleep", "60000"]
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: '{{ if .Values.image.selfserviceInvitation.registry }}{{ .Values.image.selfserviceInvitation.registry }}/{{ end }}{{ .Values.image.selfserviceInvitation.repository }}{{ if .Values.image.selfserviceInvitation.sha256 }}@sha256:{{ .Values.image.selfserviceInvitation.sha256 }}{{ else }}:{{ .Values.image.selfserviceInvitation.tag }}{{ end }}'
+          imagePullPolicy: '{{ .Values.image.pullPolicy }}'
+          envFrom:
+            - configMapRef:
+                name: '{{ include "common.names.fullname" . }}'
+          volumeMounts:
+            - name: "secrets"
+              mountPath: "/var/secrets"
             - name: "shared"
               mountPath: "/var/cache/listener"
           resources:

@@ -35,22 +35,36 @@ selfserviceListener:
   # Chose from "off", "unvalidated" and "secure".
   tlsMode: "secure"
 
+  umcServerUrl: "http://umc-server"
+  umcAdminUser: "admin"
+  umcAdminPassword: null
+
 image:
   imagePullPolicy: "Always"
   imagePullSecrets: []
-  registry: "gitregistry.knut.univention.de"
-  repository: "univention/customers/dataport/upx/selfservice-listener/selfservice-listener"
-  tag: "latest"
-  # -- Define image sha256 as an alternative to `tag`
-  sha256: null
+
+  selfserviceListener:
+    registry: "gitregistry.knut.univention.de"
+    repository: "univention/customers/dataport/upx/selfservice-listener/selfservice-listener"
+    tag: "latest"
+    # -- Define image sha256 as an alternative to `tag`
+    sha256: null
+
+  selfserviceInvitation:
+    registry: "gitregistry.knut.univention.de"
+    repository: "univention/customers/dataport/upx/selfservice-listener/selfservice-invitation"
+    tag: "latest"
+    # -- Define image sha256 as an alternative to `tag`
+    sha256: null
+
 
   waitForDependency:
-  registry: "gitregistry.knut.univention.de"
-  repository: "univention/components/univention-portal/wait-for-dependency"
-  imagePullPolicy: "Always"
-  tag: "latest"
-  ## Define image sha256 as an alternative to `tag`
-  # sha256:
+    registry: "gitregistry.knut.univention.de"
+    repository: "univention/components/univention-portal/wait-for-dependency"
+    imagePullPolicy: "Always"
+    tag: "latest"
+    ## Define image sha256 as an alternative to `tag`
+    # sha256:
 
 ## Container deployment probes
 probes:

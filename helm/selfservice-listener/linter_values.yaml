@@ -10,5 +10,8 @@ selfserviceListener:
   ldapHost: "ucs-machine"
   ldapHostDn: "cn=ucs-machine,cn=dc,cn=computers,dc=univention,dc=intranet"
   tlsMode: "unvalidated"
+  umcServerUrl: "http://umc-server"
+  umcAdminUser: "admin"
+  umcAdminPassword: "stub_password"
 
 ...

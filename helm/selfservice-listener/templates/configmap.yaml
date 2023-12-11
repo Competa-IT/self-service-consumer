@@ -16,6 +16,9 @@ data:
   LDAP_PORT: "{{ .ldapPort }}"
   NOTIFIER_SERVER: "{{ default .ldapHost .notifierServer }}"
   TLS_MODE: "{{ .tlsMode }}"
+  UMC_SERVER_URL: "{{ .umcServerUrl }}"
+  UMC_ADMIN_USER: "{{ .umcAdminUser }}"
+  UMC_ADMIN_PASSWORD: "{{ .umcAdminPassword }}"
   wait-for-ldap.sh: |
     #!/bin/bash
     set -euxo pipefail
