@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.1.0...v0.1.1) (2023-12-11)
+
+
+### Bug Fixes
+
+* **listener:** use the same ldap filter as upstream ([c124b2c](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/c124b2cc74f045df536d5de6c678c0e564821b9e))
+
 ## [0.1.0](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.0.2...v0.1.0) (2023-12-08)
 
 
