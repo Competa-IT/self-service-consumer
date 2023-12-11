@@ -33,4 +33,5 @@ class SelfserviceListener(ListenerModuleHandler):
     class Configuration(ListenerModuleHandler.Configuration):
         name = "selfservice-listener"
         description = "Self Service user invite listener"
-        ldap_filter = "(objectClass=univentionPasswordSelfService)"
+        # objectClass=univentionPasswordSelfService
+        ldap_filter = "(&(univentionPasswordSelfServiceEmail=*)(uid=*)(|(shadowMax=1)(shadowLastChange=0)))"
