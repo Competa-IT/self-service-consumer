@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.1.1...v0.2.0) (2023-12-12)
+
+
+### Features
+
+* **invitation:** Add selfservice invitation container ([d1ff470](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/d1ff47044dd67233a455fd8012324b6e56847929))
+
 ## [0.1.1](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.1.0...v0.1.1) (2023-12-11)
 
 
