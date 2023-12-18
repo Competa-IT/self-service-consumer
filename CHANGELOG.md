@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.3.0...v0.3.1) (2023-12-18)
+
+
+### Bug Fixes
+
+* **ci:** add Helm chart signing and publishing to souvap via OCI, common-ci 1.12.x ([329726e](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/329726e07f22b602a63fa635ffcc567dbbae4fc7))
+
 ## [0.3.0](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.2.0...v0.3.0) (2023-12-12)
 
 
