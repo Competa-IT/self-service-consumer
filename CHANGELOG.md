@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.2](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.3.1...v0.3.2) (2023-12-21)
+
+
+### Bug Fixes
+
+* **docker:** bump version to UCS 5.0-6 ([2abc091](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/2abc09170f3276753cb5be785b20090232774cf4))
+
 ## [0.3.1](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.3.0...v0.3.1) (2023-12-18)
 
 
