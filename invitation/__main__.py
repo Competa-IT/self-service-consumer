@@ -1,13 +1,14 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2024 Univention GmbH
-
+import asyncio
 import logging
 import os
 import sys
-import time
-from pathlib import Path
-
+from typing import Optional
+from aiohttp import ClientResponseError
 import requests
+from client import AsyncClient, MessageHandler, Settings
+from shared.models import Message
 
 
 class Invitation():
@@ -18,20 +19,25 @@ class Invitation():
         self.umc_server_url = os.environ.get("UMC_SERVER_URL", "http://umc-server")
         self.umc_admin_user = os.environ.get("UMC_ADMIN_USER", "admin")
         self.umc_admin_password = os.environ.get("UMC_ADMIN_PASSWORD")
-        self.queue_directory = Path("/var/cache/listener")
+        self.provisioning_admin_username = os.environ.get("PROVISIONING_ADMIN_USERNAME")
+        self.provisioning_admin_password = os.environ.get("PROVISIONING_ADMIN_PASSWORD")
+        self.provisioning_username = os.environ.get("PROVISIONING_USERNAME")
+        self.provisioning_password = os.environ.get("PROVISIONING_PASSWORD")
+        self.provisioning_api_base_url = os.environ.get("PROVISIONING_API_BASE_URL")
+        self.provisioning_realm_topic = ["udm", "users/user"]
 
         self.retry_cache = {}
 
     def configure_logging(self):
-         console_handler = logging.StreamHandler(sys.stdout)
-         self.logger = logging.getLogger("selfservice-invitation")
-         self.logger.setLevel(os.environ.get("LOG_LEVEL", "DEBUG"))
-         formatter = logging.Formatter(
-             "%(asctime)s.%(msecs)03d  %(name)-11s ( %(levelname)-7s ) : %(message)s",
-             "%d.%m.%y %H:%M:%S",
-         )
-         console_handler.setFormatter(formatter)
-         self.logger.addHandler(console_handler)
+        console_handler = logging.StreamHandler(sys.stdout)
+        self.logger = logging.getLogger("selfservice-invitation")
+        self.logger.setLevel(os.environ.get("LOG_LEVEL", "DEBUG"))
+        formatter = logging.Formatter(
+            "%(asctime)s.%(msecs)03d  %(name)-11s ( %(levelname)-7s ) : %(message)s",
+            "%d.%m.%y %H:%M:%S",
+        )
+        console_handler.setFormatter(formatter)
+        self.logger.addHandler(console_handler)
 
     def evaluate_retry(self, username: str):
         retries = self.retry_cache.get(username, 0)
@@ -44,8 +50,23 @@ class Invitation():
         self.retry_cache[username] = retries
         self.logger.debug("Tried sending the invitation email for %s %s times", username, retries)
 
-    def handle_file(self, path: Path):
-        username = path.name[:-5]
+    @staticmethod
+    def extract_username(msg: Message) -> Optional[str]:
+        new_obj = msg.body.get("new")
+        if new_obj and msg.body.get("old") is None:
+            username = new_obj.get("uid")
+            if username and new_obj.get("univentionPasswordSelfServiceEmail"):
+                return username
+        return None
+
+    async def handle_new_user(self, msg: Message):
+        self.logger.info("Received the message with the content: %s", msg.body)
+
+        username = self.extract_username(msg)
+        if username is None:
+            return
+
+        self.logger.info("Sending email invitation to user %s" % username)
         try:
             response = requests.post(
                 f"{self.umc_server_url}/command/passwordreset/send_token",
@@ -63,25 +84,43 @@ class Invitation():
                     "There was an error requesting a user invitation email: %r"
                     % response_data
                 )
-                self.evaluate_retry(username)
+                # self.evaluate_retry(username) # TODO: implement new retry logic
                 return
-            self.logger.info("Email invitation sent to user %s" % username)
+            self.logger.info("Email invitation was sent")
             self.logger.debug(response_data)
-            os.remove(path)
-            self.logger.debug("Removing %s to avoid duplicate email invites" % path)
         except requests.exceptions.ConnectionError as e:
             self.logger.error("Could not reach UMC server: %r" % e)
 
-    def run(self):
-        self.logger.info("Starting the filesystem watch to trigger invitation emails via the UMC")
-        while True:
-            self.logger.debug("Checking queue directory for new files: %s", self.queue_directory)
-            for filename in self.queue_directory.glob("*.send"):
-                self.handle_file(filename)
+    async def run(self):
+        self.logger.info("Starting the process of sending invitation emails via the UMC")
+        admin_settings = Settings(
+            provisioning_api_username=self.provisioning_admin_username,
+            provisioning_api_password=self.provisioning_admin_password,
+            provisioning_api_base_url=self.provisioning_api_base_url,
+        )
+        settings = Settings(
+            provisioning_api_username=self.provisioning_username,
+            provisioning_api_password=self.provisioning_password,
+            provisioning_api_base_url=self.provisioning_api_base_url,
+        )
+        async with AsyncClient(admin_settings) as admin_client:
+            try:
+                await admin_client.create_subscription(
+                    settings.provisioning_api_username,
+                    settings.provisioning_api_password,
+                    [self.provisioning_realm_topic],
+                    True,
+                )
+            except ClientResponseError as e:
+                self.logger.warning("%s, Client already exists", e)
 
-            time.sleep(5)
+        self.logger.info("Listening for newly created users")
+        async with AsyncClient(settings) as client:
+            await MessageHandler(
+                client, settings.provisioning_api_username, [self.handle_new_user]
+            ).run()
 
 
 if __name__ == "__main__":
     invitation = Invitation()
-    invitation.run()
+    asyncio.run(invitation.run())

@@ -39,8 +39,12 @@ WORKDIR /app
 RUN apt-get update -qq && \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
       python3=3.11.* \
-      python3-requests=2.28.* && \
+      python3-requests=2.28.* \
+      python3-aiohttp=3.8.* \
+      python3-pip=23.* && \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
+
+RUN pip3 install --break-system-packages provisioning-consumer-lib --index-url https://git.knut.univention.de/api/v4/projects/882/packages/pypi/simple
 
 COPY ./invitation/__main__.py /app
 
