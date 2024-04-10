@@ -5,13 +5,14 @@ import logging
 import os
 import sys
 from typing import Optional
-from aiohttp import ClientResponseError
+from aiohttp import ClientResponseError, ClientSession
 import requests
 from client import AsyncClient, MessageHandler, Settings
 from shared.models import Message
 
 
-class Invitation():
+class Invitation:
+    MAX_RETRIES: int = 3
 
     def __init__(self):
         self.configure_logging()
@@ -39,17 +40,6 @@ class Invitation():
         console_handler.setFormatter(formatter)
         self.logger.addHandler(console_handler)
 
-    def evaluate_retry(self, username: str):
-        retries = self.retry_cache.get(username, 0)
-        if retries > 4:
-            self.logger.error("Maximum retries reached for user %s. Check the UMC logs for more information", username)
-            self.logger.debug("User retries are %r", self.retry_cache)
-            sys.exit(1)
-
-        retries += 1
-        self.retry_cache[username] = retries
-        self.logger.debug("Tried sending the invitation email for %s %s times", username, retries)
-
     @staticmethod
     def extract_username(msg: Message) -> Optional[str]:
         new_obj = msg.body.get("new")
@@ -60,18 +50,15 @@ class Invitation():
         return None
 
     def send_email(self, username: str):
-        return requests.post(
-            f"{self.umc_server_url}/command/passwordreset/send_token",
-            json={
-                "options": {
-                    "username": username,
-                    "method": "email",
-                },
-            },
-            auth=(self.umc_admin_user, self.umc_admin_password),
-        )
+        async with ClientSession() as session:
+            async with session.post(
+                    f"{self.umc_server_url}/command/passwordreset/send_token",
+                    json={"options": {"username": username, "method": "email"}},
+                    auth=(self.umc_admin_user, self.umc_admin_password),
+            ) as response:
+                return response
 
-    async def handle_new_user(self, msg: Message):
+    async def handle_new_user(self, msg: Message) -> None:
         self.logger.info("Received the message with the content: %s", msg.body)
         username = self.extract_username(msg)
         if username is None:
@@ -79,17 +66,16 @@ class Invitation():
 
         try:
             retries = 0
-            while retries < 3:
-                self.logger.info("Sending email invitation to user %s" % username)
+            while retries < self.MAX_RETRIES:
+                self.logger.info("Sending email invitation to user %s", username)
                 response = self.send_email(username)
                 response_data = response.json()
                 if response.status_code != 200:
                     self.logger.error(
-                        "There was an error requesting a user invitation email: %r"
-                        % response_data
+                        "There was an error requesting a user invitation email: %r", response_data
                     )
                     retries += 1
-                    self.logger.info("Tried sending the invitation email for %s %s times", username, retries)
+                    self.logger.info("Failed sending the invitation email for %s %s times", username, retries)
                     continue
                 self.logger.info("Email invitation was sent")
                 self.logger.debug(response_data)
@@ -99,7 +85,7 @@ class Invitation():
             sys.exit(1)
 
         except requests.exceptions.ConnectionError as e:
-            self.logger.error("Could not reach UMC server: %r" % e)
+            self.logger.error("Could not reach UMC server: %r", e)
 
     async def run(self):
         self.logger.info("Starting the process of sending invitation emails via the UMC")
