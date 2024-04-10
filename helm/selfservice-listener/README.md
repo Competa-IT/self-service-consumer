@@ -40,6 +40,112 @@ user an email to set their password.
 			<td></td>
 		</tr>
 		<tr>
+			<td>config</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "provisioningApiBaseUrl": "http://provisioning-api",
+  "umcServerUrl": "http://umc-server"
+}
+</pre>
+</td>
+			<td>Configuration of the selfservice listener</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContext.allowPrivilegeEscalation</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Enable container privileged escalation.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContext.capabilities</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "drop": [
+    "ALL"
+  ]
+}
+</pre>
+</td>
+			<td>Security capabilities for container.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContext.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enable security context.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContext.readOnlyRootFilesystem</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Mounts the container's root filesystem as read-only.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContext.runAsGroup</td>
+			<td>int</td>
+			<td><pre lang="json">
+1000
+</pre>
+</td>
+			<td>Process group id.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContext.runAsNonRoot</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Run container as a user.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContext.runAsUser</td>
+			<td>int</td>
+			<td><pre lang="json">
+1000
+</pre>
+</td>
+			<td>Process user id.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContext.seccompProfile.type</td>
+			<td>string</td>
+			<td><pre lang="json">
+"RuntimeDefault"
+</pre>
+</td>
+			<td>Disallow custom Seccomp profile by setting it to RuntimeDefault.</td>
+		</tr>
+		<tr>
+			<td>environment</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>extraSecrets</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>Optionally specify a secret to create (primarily intended to be used in development environments to provide custom certificates)</td>
+		</tr>
+		<tr>
 			<td>fullnameOverride</td>
 			<td>string</td>
 			<td><pre lang="json">
@@ -49,16 +155,7 @@ user an email to set their password.
 			<td></td>
 		</tr>
 		<tr>
-			<td>image.imagePullSecrets</td>
-			<td>list</td>
-			<td><pre lang="json">
-[]
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>image.pullPolicy</td>
+			<td>image.imagePullPolicy</td>
 			<td>string</td>
 			<td><pre lang="json">
 "Always"
@@ -79,19 +176,10 @@ user an email to set their password.
 			<td>image.repository</td>
 			<td>string</td>
 			<td><pre lang="json">
-"univention/customers/dataport/upx/selfservice-listener/selfservice-listener"
+"univention/customers/dataport/upx/selfservice-listener/selfservice-invitation"
 </pre>
 </td>
 			<td></td>
-		</tr>
-		<tr>
-			<td>image.sha256</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Define image sha256 as an alternative to `tag`</td>
 		</tr>
 		<tr>
 			<td>image.tag</td>
@@ -148,15 +236,6 @@ null
 			<td></td>
 		</tr>
 		<tr>
-			<td>resources</td>
-			<td>object</td>
-			<td><pre lang="json">
-{}
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
 			<td>securityContext</td>
 			<td>object</td>
 			<td><pre lang="json">
@@ -166,112 +245,49 @@ null
 			<td></td>
 		</tr>
 		<tr>
-			<td>selfserviceListener.caCert</td>
+			<td>serviceAccount.annotations</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>serviceAccount.automountServiceAccountToken</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>serviceAccount.create</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>serviceAccount.labels</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td>Additional custom labels for the ServiceAccount.</td>
+		</tr>
+		<tr>
+			<td>serviceAccount.name</td>
 			<td>string</td>
 			<td><pre lang="json">
 ""
 </pre>
 </td>
-			<td>CA root certificate, base64-encoded. Optional; will be written to "caCertFile" if set.</td>
-		</tr>
-		<tr>
-			<td>selfserviceListener.caCertFile</td>
-			<td>string</td>
-			<td><pre lang="json">
-""
-</pre>
-</td>
-			<td>Where to search for the CA Certificate file. caCertFile: "/var/secrets/ca_cert"</td>
-		</tr>
-		<tr>
-			<td>selfserviceListener.debugLevel</td>
-			<td>string</td>
-			<td><pre lang="json">
-"4"
-</pre>
-</td>
 			<td></td>
-		</tr>
-		<tr>
-			<td>selfserviceListener.environment</td>
-			<td>string</td>
-			<td><pre lang="json">
-"production"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>selfserviceListener.ldapBaseDn</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>selfserviceListener.ldapHost</td>
-			<td>string</td>
-			<td><pre lang="json">
-"ucs-machine"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>selfserviceListener.ldapHostDn</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>selfserviceListener.ldapPassword</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>LDAP password for `cn=admin`. Will be written to "ldapPasswordFile" if set.</td>
-		</tr>
-		<tr>
-			<td>selfserviceListener.ldapPasswordFile</td>
-			<td>string</td>
-			<td><pre lang="json">
-"/var/secrets/ldap_secret"
-</pre>
-</td>
-			<td>The path to the "ldapPasswordFile" docker secret or a plain file</td>
-		</tr>
-		<tr>
-			<td>selfserviceListener.ldapPort</td>
-			<td>string</td>
-			<td><pre lang="json">
-"389"
-</pre>
-</td>
-			<td>Will add a mapping from "ldapHost" to "ldapHostIp" into "/etc/hosts" if set</td>
-		</tr>
-		<tr>
-			<td>selfserviceListener.notifierServer</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Defaults to "ldapHost" if not set.</td>
-		</tr>
-		<tr>
-			<td>selfserviceListener.tlsMode</td>
-			<td>string</td>
-			<td><pre lang="json">
-"secure"
-</pre>
-</td>
-			<td>Whether to start encryption and validate certificates. Chose from "off", "unvalidated" and "secure".</td>
 		</tr>
 		<tr>
 			<td>tolerations</td>
@@ -284,4 +300,5 @@ null
 		</tr>
 	</tbody>
 </table>
+
 

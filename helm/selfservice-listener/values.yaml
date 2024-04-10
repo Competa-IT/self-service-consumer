@@ -2,6 +2,10 @@
 # SPDX-FileCopyrightText: 2024 Univention GmbH
 
 ---
+# Default values for the selfservice-listener.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
 
 ## Global values
 affinity: {}
@@ -15,98 +19,59 @@ replicaCount: 1
 securityContext: {}
 tolerations: []
 
-selfserviceListener:
-  environment: "production"
-  # -- CA root certificate, base64-encoded. Optional; will be written to "caCertFile" if set.
-  caCert: ""
-  # -- Where to search for the CA Certificate file.
-  caCertFile: "/run/secrets/ca_cert"
-  certPem: ""
-  debugLevel: "4"
-  ldapBaseDn: null
-  # -- LDAP password for `cn=admin`. Will be written to "ldapPasswordFile" if set.
-  ldapPassword: null
-  # -- The path to the "ldapPasswordFile" docker secret or a plain file
-  ldapPasswordFile: "/var/secrets/ldap_secret"
-  ldapHost: "ucs-machine"
-  ldapHostDn: null
-  # -- Will add a mapping from "ldapHost" to "ldapHostIp" into "/etc/hosts" if set
-  ldapPort: "389"
-  # -- Defaults to "ldapHost" if not set.
-  notifierServer: null
-  # -- Whether to start encryption and validate certificates.
-  # Chose from "off", "unvalidated" and "secure".
-  tlsMode: "secure"
-
-  umcServerUrl: "http://umc-server"
-  umcAdminUser: "admin"
-  umcAdminPassword: null
 
 image:
+  registry: "gitregistry.knut.univention.de"
+  repository: "univention/customers/dataport/upx/selfservice-listener/selfservice-invitation"
   imagePullPolicy: "Always"
-  imagePullSecrets: []
+  tag: "latest"
 
-  selfserviceListener:
-    registry: "gitregistry.knut.univention.de"
-    repository: "univention/customers/dataport/upx/selfservice-listener/selfservice-listener"
-    tag: "latest"
-    # -- Define image sha256 as an alternative to `tag`
-    sha256: null
+# -- Configuration of the selfservice listener
+config:
+  provisioningApiBaseUrl: "http://provisioning-api"
+  umcServerUrl: "http://umc-server"
 
-  selfserviceInvitation:
-    registry: "gitregistry.knut.univention.de"
-    repository: "univention/customers/dataport/upx/selfservice-listener/selfservice-invitation"
-    tag: "latest"
-    # -- Define image sha256 as an alternative to `tag`
-    sha256: null
+# -- Optionally specify a secret to create (primarily intended to be used in development environments to provide custom certificates)
+extraSecrets: []
 
-
-  waitForDependency:
-    registry: "gitregistry.knut.univention.de"
-    repository: "univention/components/univention-portal/wait-for-dependency"
-    imagePullPolicy: "Always"
-    tag: "latest"
-    ## Define image sha256 as an alternative to `tag`
-    # sha256:
-
-## Container deployment probes
-probes:
-  liveness:
-    enabled: true
-    initialDelaySeconds: 120
-    timeoutSeconds: 3
-    periodSeconds: 30
-    failureThreshold: 3
-    successThreshold: 1
-
-  readiness:
-    enabled: true
-    initialDelaySeconds: 30
-    timeoutSeconds: 3
-    periodSeconds: 15
-    failureThreshold: 30
-    successThreshold: 1
-
-# -- Deployment resources for the listener container
-resources: {}
-  # requests:
-  #   memory: "512Mi"
-  #   cpu: "250m"
-  # limits:
-  #   memory: "4Gi"
-  #   cpu: "4"
-
-# -- Deployment resources for the dependency waiters
-resourcesWaitForDependency: {}
+# Service account to use.
+# Ref.: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+  ## @param serviceAccount.automountServiceAccountToken Allows auto mount of ServiceAccountToken on the serviceAccount created
+  ## Can be set to false if pods using this serviceAccount do not need to use K8s API
+  ##
+  automountServiceAccountToken: false
+  # -- Additional custom labels for the ServiceAccount.
+  labels: {}
 
 
-autoscaling:
-  enabled: false
-
-
-persistence:
-  data:
-    storageClass: ""
-    size: "1Gi"
-
-...
+# Security Context.
+# Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+containerSecurityContext:
+  # -- Enable container privileged escalation.
+  allowPrivilegeEscalation: false
+  # -- Security capabilities for container.
+  capabilities:
+    drop:
+      - "ALL"
+  # -- Enable security context.
+  enabled: true
+  # -- Process user id.
+  runAsUser: 1000
+  # -- Process group id.
+  runAsGroup: 1000
+  # Set Seccomp profile.
+  seccompProfile:
+    # -- Disallow custom Seccomp profile by setting it to RuntimeDefault.
+    type: "RuntimeDefault"
+  # -- Mounts the container's root filesystem as read-only.
+  readOnlyRootFilesystem: true
+  # -- Run container as a user.
+  runAsNonRoot: true

@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2024 Univention GmbH
+
 import asyncio
 import logging
 import os
@@ -27,8 +28,6 @@ class Invitation:
         self.provisioning_api_base_url = os.environ.get("PROVISIONING_API_BASE_URL")
         self.provisioning_realm_topic = ["udm", "users/user"]
 
-        self.retry_cache = {}
-
     def configure_logging(self):
         console_handler = logging.StreamHandler(sys.stdout)
         self.logger = logging.getLogger("selfservice-invitation")
@@ -45,16 +44,23 @@ class Invitation:
         new_obj = msg.body.get("new")
         if new_obj and msg.body.get("old") is None:
             username = new_obj.get("uid")
-            if username and new_obj.get("univentionPasswordSelfServiceEmail"):
+            if (
+                username
+                and new_obj.get("univentionPasswordSelfServiceEmail")
+                and (
+                    new_obj.get("shadowMax") == 1
+                    or new_obj.get("shadowLastChange") == 0
+                )
+            ):
                 return username
         return None
 
-    def send_email(self, username: str):
+    async def send_email(self, username: str):
         async with ClientSession() as session:
             async with session.post(
-                    f"{self.umc_server_url}/command/passwordreset/send_token",
-                    json={"options": {"username": username, "method": "email"}},
-                    auth=(self.umc_admin_user, self.umc_admin_password),
+                f"{self.umc_server_url}/command/passwordreset/send_token",
+                json={"options": {"username": username, "method": "email"}},
+                auth=(self.umc_admin_user, self.umc_admin_password),
             ) as response:
                 return response
 
@@ -68,27 +74,37 @@ class Invitation:
             retries = 0
             while retries < self.MAX_RETRIES:
                 self.logger.info("Sending email invitation to user %s", username)
-                response = self.send_email(username)
+                response = await self.send_email(username)
                 response_data = response.json()
                 if response.status_code != 200:
                     self.logger.error(
-                        "There was an error requesting a user invitation email: %r", response_data
+                        "There was an error requesting a user invitation email: %r",
+                        response_data,
                     )
                     retries += 1
-                    self.logger.info("Failed sending the invitation email for %s %s times", username, retries)
+                    self.logger.info(
+                        "Failed sending the invitation email for %s %s times",
+                        username,
+                        retries,
+                    )
                     continue
                 self.logger.info("Email invitation was sent")
                 self.logger.debug(response_data)
                 return
 
-            self.logger.error("Maximum retries reached for user %s. Check the UMC logs for more information", username)
+            self.logger.error(
+                "Maximum retries reached for user %s. Check the UMC logs for more information",
+                username,
+            )
             sys.exit(1)
 
         except requests.exceptions.ConnectionError as e:
             self.logger.error("Could not reach UMC server: %r", e)
 
     async def run(self):
-        self.logger.info("Starting the process of sending invitation emails via the UMC")
+        self.logger.info(
+            "Starting the process of sending invitation emails via the UMC"
+        )
         admin_settings = Settings(
             provisioning_api_username=self.provisioning_admin_username,
             provisioning_api_password=self.provisioning_admin_password,
