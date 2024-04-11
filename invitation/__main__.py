@@ -6,8 +6,7 @@ import logging
 import os
 import sys
 from typing import Optional
-from aiohttp import ClientResponseError, ClientSession
-import requests
+from aiohttp import ClientResponseError, ClientSession, ClientResponse, BasicAuth, ClientConnectorError
 from client import AsyncClient, MessageHandler, Settings
 from shared.models import Message
 
@@ -28,7 +27,7 @@ class Invitation:
         self.provisioning_api_base_url = os.environ.get("PROVISIONING_API_BASE_URL")
         self.provisioning_realm_topic = ["udm", "users/user"]
 
-    def configure_logging(self):
+    def configure_logging(self) -> None:
         console_handler = logging.StreamHandler(sys.stdout)
         self.logger = logging.getLogger("selfservice-invitation")
         self.logger.setLevel(os.environ.get("LOG_LEVEL", "DEBUG"))
@@ -45,24 +44,20 @@ class Invitation:
         if new_obj and msg.body.get("old") is None:
             username = new_obj.get("uid")
             if (
-                username
-                and new_obj.get("univentionPasswordSelfServiceEmail")
-                and (
-                    new_obj.get("shadowMax") == 1
-                    or new_obj.get("shadowLastChange") == 0
-                )
+                    username
+                    and new_obj.get("univentionPasswordSelfServiceEmail")
+                    and (new_obj.get("shadowMax") == 1 or new_obj.get("shadowLastChange") == 0)
             ):
                 return username
         return None
 
-    async def send_email(self, username: str):
-        async with ClientSession() as session:
-            async with session.post(
+    async def send_email(self, username: str) -> ClientResponse:
+        async with ClientSession() as session, session.post(
                 f"{self.umc_server_url}/command/passwordreset/send_token",
                 json={"options": {"username": username, "method": "email"}},
-                auth=(self.umc_admin_user, self.umc_admin_password),
-            ) as response:
-                return response
+                auth=BasicAuth(self.umc_admin_user, self.umc_admin_password)
+        ) as response:
+            return response
 
     async def handle_new_user(self, msg: Message) -> None:
         self.logger.info("Received the message with the content: %s", msg.body)
@@ -96,12 +91,14 @@ class Invitation:
                 "Maximum retries reached for user %s. Check the UMC logs for more information",
                 username,
             )
+            # Crash the process; an unhandled message will be redelivered
             sys.exit(1)
 
-        except requests.exceptions.ConnectionError as e:
+        except ClientConnectorError as e:
             self.logger.error("Could not reach UMC server: %r", e)
+            raise
 
-    async def run(self):
+    async def run(self) -> None:
         self.logger.info(
             "Starting the process of sending invitation emails via the UMC"
         )
