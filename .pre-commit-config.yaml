@@ -40,6 +40,35 @@ repos:
           - "DL3059"
           - "--ignore"
           - "DL3008"
+  # "Ruff Python linter"
+  - repo: "https://github.com/charliermarsh/ruff-pre-commit"
+    rev: "v0.0.287"
+    hooks:
+      - id: "ruff"
+      - id: "ruff"
+        alias: "ruff-fix"
+        stages: [ "manual" ]
+        args: [ "--fix" ]
+
+  # "Black Python formatter"
+  - repo: "https://github.com/psf/black"
+    rev: "23.7.0"
+    hooks:
+      - id: "black"
+
+  # "Helm chart linter"
+  - repo: "https://github.com/gruntwork-io/pre-commit"
+    rev: "v0.1.22"
+    hooks:
+      - id: "helmlint"
+
+  - repo: "https://github.com/norwoodj/helm-docs"
+    rev: "v1.11.0"
+    hooks:
+      - id: "helm-docs"
+        args:
+          - "--chart-search-root=helm"
+          - "--template-files=README.md.gotmpl"
 
   - repo: "https://git.knut.univention.de/univention/dist/pre-commit-hooks/addlicense"
     rev: "v1.0.1"

@@ -6,7 +6,13 @@ import logging
 import os
 import sys
 from typing import Optional
-from aiohttp import ClientResponseError, ClientSession, ClientResponse, BasicAuth, ClientConnectorError
+from aiohttp import (
+    ClientResponseError,
+    ClientSession,
+    ClientResponse,
+    BasicAuth,
+    ClientConnectorError,
+)
 from client import AsyncClient, MessageHandler, Settings
 from shared.models import Message
 
@@ -44,18 +50,21 @@ class Invitation:
         if new_obj and msg.body.get("old") is None:
             username = new_obj.get("uid")
             if (
-                    username
-                    and new_obj.get("univentionPasswordSelfServiceEmail")
-                    and (new_obj.get("shadowMax") == 1 or new_obj.get("shadowLastChange") == 0)
+                username
+                and new_obj.get("univentionPasswordSelfServiceEmail")
+                and (
+                    new_obj.get("shadowMax") == 1
+                    or new_obj.get("shadowLastChange") == 0
+                )
             ):
                 return username
         return None
 
     async def send_email(self, username: str) -> ClientResponse:
         async with ClientSession() as session, session.post(
-                f"{self.umc_server_url}/command/passwordreset/send_token",
-                json={"options": {"username": username, "method": "email"}},
-                auth=BasicAuth(self.umc_admin_user, self.umc_admin_password)
+            f"{self.umc_server_url}/command/passwordreset/send_token",
+            json={"options": {"username": username, "method": "email"}},
+            auth=BasicAuth(self.umc_admin_user, self.umc_admin_password),
         ) as response:
             return response
 
@@ -71,7 +80,7 @@ class Invitation:
                 self.logger.info("Sending email invitation to user %s", username)
                 response = await self.send_email(username)
                 response_data = response.json()
-                if response.status_code != 200:
+                if response.status != 200:
                     self.logger.error(
                         "There was an error requesting a user invitation email: %r",
                         response_data,
@@ -98,7 +107,7 @@ class Invitation:
             self.logger.error("Could not reach UMC server: %r", e)
             raise
 
-    async def run(self) -> None:
+    async def start_the_process_of_sending_invitation(self) -> None:
         self.logger.info(
             "Starting the process of sending invitation emails via the UMC"
         )
@@ -130,6 +139,10 @@ class Invitation:
             ).run()
 
 
-if __name__ == "__main__":
+def run():
     invitation = Invitation()
-    asyncio.run(invitation.run())
+    asyncio.run(invitation.start_the_process_of_sending_invitation())
+
+
+if __name__ == "__main__":
+    run()
