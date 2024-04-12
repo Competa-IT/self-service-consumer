@@ -12,6 +12,7 @@ packages = [{ include = "invitation" }]
 [tool.poetry.dependencies]
 python = "^3.8"
 aiohttp = "^3.8.5"
+anyio = "^4.3.0"
 provisioning-consumer-lib = "^0.1.0"
 
 [tool.poetry.scripts]
