@@ -3,7 +3,7 @@
 
 from copy import deepcopy
 from datetime import datetime
-from unittest.mock import AsyncMock, patch, MagicMock
+from unittest.mock import AsyncMock, patch, MagicMock, Mock
 import pytest
 from client import AsyncClient, MessageHandler
 from shared.models import Message, PublisherName
@@ -96,7 +96,7 @@ class TestInvitation:
         invitation = Invitation()
         mock_post.return_value.__aenter__.return_value = MockedResponse(200, {})
         message_handler.run = AsyncMock(
-            return_value=invitation.handle_new_user(MESSAGE)
+            side_effect=await invitation.handle_new_user(MESSAGE)
         )
 
         await invitation.start_the_process_of_sending_invitations()
@@ -122,7 +122,7 @@ class TestInvitation:
         invitation = Invitation()
         mock_post.return_value.__aenter__.return_value = MockedResponse(200, {})
         message_handler.run = AsyncMock(
-            return_value=invitation.handle_new_user(MESSAGE_OLD_USER)
+            side_effect=await invitation.handle_new_user(MESSAGE_OLD_USER)
         )
 
         await invitation.start_the_process_of_sending_invitations()
@@ -149,7 +149,7 @@ class TestInvitation:
         invitation = Invitation()
         mock_post.return_value.__aenter__.return_value = MockedResponse(200, {})
         message_handler.run = AsyncMock(
-            return_value=invitation.handle_new_user(message)
+            side_effect=await invitation.handle_new_user(message)
         )
 
         await invitation.start_the_process_of_sending_invitations()
@@ -164,19 +164,20 @@ class TestInvitation:
         mock_post.assert_not_called()
 
     @patch("invitation.__main__.asyncio.sleep")
+    @patch("invitation.__main__.sys.exit")
     async def test_error_during_sending_email(
         self,
+        mock_sys_exit,
         mock_sleep,
         mock_post,
         async_client: AsyncClient,
         message_handler: MessageHandler,
     ):
         invitation = Invitation()
+        mock_sys_exit.side_effect = Exception("SystemExit 1")
         mock_post.return_value.__aenter__.return_value = MockedResponse(500, {})
-        message_handler.run = AsyncMock(
-            return_value=invitation.handle_new_user(MESSAGE)
-        )
-        with pytest.raises(SystemExit, match="1"):
+        message_handler.run = Mock(return_value=invitation.handle_new_user(MESSAGE))
+        with pytest.raises(Exception, match="SystemExit 1"):
             await invitation.start_the_process_of_sending_invitations()
 
         async_client.create_subscription.assert_called_once_with(
@@ -188,3 +189,4 @@ class TestInvitation:
         message_handler.run.assert_called_once_with()
         assert mock_post.call_count == 3
         assert mock_sleep.call_count == 2
+        mock_sys_exit.assert_called_once_with(1)

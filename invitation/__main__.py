@@ -12,6 +12,7 @@ from aiohttp import (
     ClientResponse,
     BasicAuth,
     ClientConnectorError,
+    ClientTimeout,
 )
 from client import AsyncClient, MessageHandler, Settings
 from shared.models import Message
@@ -61,7 +62,9 @@ class Invitation:
         return None
 
     async def send_email(self, username: str) -> ClientResponse:
-        async with ClientSession() as session, session.post(
+        async with ClientSession(
+            timeout=ClientTimeout(total=30)
+        ) as session, session.post(
             f"{self.umc_server_url}/command/passwordreset/send_token",
             json={"options": {"username": username, "method": "email"}},
             auth=BasicAuth(self.umc_admin_user, self.umc_admin_password),
@@ -70,7 +73,7 @@ class Invitation:
 
     async def retry_or_fail_sending_invitation(
         self, response_data: dict, username: str, retries: int
-    ):
+    ) -> None:
         self.logger.error(
             "There was an error requesting a user invitation email: %r",
             response_data,
