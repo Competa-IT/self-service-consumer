@@ -49,14 +49,12 @@ class Invitation:
     def extract_username(msg: Message) -> Optional[str]:
         new_obj = msg.body.get("new")
         if new_obj and msg.body.get("old") is None:
-            username = new_obj.get("uid")
+            properties = new_obj.get("properties", {})
+            username = properties.get("username")
             if (
                 username
-                and new_obj.get("univentionPasswordSelfServiceEmail")
-                and (
-                    new_obj.get("shadowMax") == 1
-                    or new_obj.get("shadowLastChange") == 0
-                )
+                and properties.get("PasswordRecoveryEmail")
+                and properties.get("pwdChangeNextLogin") is not None
             ):
                 return username
         return None

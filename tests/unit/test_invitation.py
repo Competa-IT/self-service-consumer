@@ -29,7 +29,7 @@ class MockedResponse(MagicMock):
         self.json = AsyncMock(return_value=json)
 
 
-UID = "testuser"
+USERNAME = "testuser"
 MESSAGE = Message(
     publisher_name=PublisherName.udm_listener,
     ts=datetime(2023, 11, 9, 11, 15, 52, 616061),
@@ -37,36 +37,35 @@ MESSAGE = Message(
     topic="users/user",
     body={
         "new": {
-            "uid": UID,
-            "univentionPasswordSelfServiceEmail": "example@gmail.com",
-            "shadowMax": 1,
+            "properties": {
+                "username": USERNAME,
+                "PasswordRecoveryEmail": "example@gmail.com",
+                "pwdChangeNextLogin": True,
+            }
         },
         "old": None,
     },
 )
 MESSAGE_OLD_USER = deepcopy(MESSAGE)
-MESSAGE_OLD_USER.body = {"new": {"uid": UID}, "old": {"uid": UID}}
+MESSAGE_OLD_USER.body["old"] = {"properties": {"username": USERNAME}}
 
 MESSAGE_NO_EMAIL = deepcopy(MESSAGE)
-MESSAGE_NO_EMAIL.body = {"new": {"uid": UID, "shadowMax": 1}, "old": None}
-
-MESSAGE_INVALID_SHADOWMAX_VALUES = deepcopy(MESSAGE)
-MESSAGE_INVALID_SHADOWMAX_VALUES.body = {
-    "new": {
-        "uid": UID,
-        "univentionPasswordSelfServiceEmail": "example@gmail.com",
-        "shadowMax": 0,
-        "shadowLastChange": 1,
-    },
-    "old": None,
+MESSAGE_NO_EMAIL.body["new"]["properties"] = {
+    "username": USERNAME,
+    "pwdChangeNextLogin": True,
 }
 
-MESSAGE_NO_UID = deepcopy(MESSAGE)
-MESSAGE_NO_UID.body = {
-    "new": {
-        "univentionPasswordSelfServiceEmail": "example@gmail.com",
-    },
-    "old": None,
+MESSAGE_PWD_CHANGE_NEXT_LOGIN_IS_NONE = deepcopy(MESSAGE)
+MESSAGE_PWD_CHANGE_NEXT_LOGIN_IS_NONE.body["new"]["properties"] = {
+    "username": USERNAME,
+    "PasswordRecoveryEmail": "example@gmail.com",
+    "pwdChangeNextLogin": None,
+}
+
+MESSAGE_NO_USERNAME = deepcopy(MESSAGE)
+MESSAGE_NO_USERNAME.body["new"]["properties"] = {
+    "PasswordRecoveryEmail": "example@gmail.com",
+    "pwdChangeNextLogin": True,
 }
 
 
@@ -110,7 +109,7 @@ class TestInvitation:
         message_handler.run.assert_called_once_with()
         mock_post.assert_called_once_with(
             f"{ENV_DEFAULTS['UMC_SERVER_URL']}/command/passwordreset/send_token",
-            json={"options": {"username": UID, "method": "email"}},
+            json={"options": {"username": USERNAME, "method": "email"}},
             auth=BasicAuth(
                 ENV_DEFAULTS["UMC_ADMIN_USER"], ENV_DEFAULTS["UMC_ADMIN_PASSWORD"]
             ),
@@ -137,7 +136,8 @@ class TestInvitation:
         mock_post.assert_not_called()
 
     @pytest.mark.parametrize(
-        "message", [MESSAGE_NO_EMAIL, MESSAGE_NO_UID, MESSAGE_INVALID_SHADOWMAX_VALUES]
+        "message",
+        [MESSAGE_NO_EMAIL, MESSAGE_NO_USERNAME, MESSAGE_PWD_CHANGE_NEXT_LOGIN_IS_NONE],
     )
     async def test_user_does_not_have_needed_fields(
         self,
