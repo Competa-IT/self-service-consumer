@@ -82,7 +82,8 @@ class Invitation:
             retries,
         )
         if retries < self.MAX_RETRIES:
-            await asyncio.sleep(retries)
+            timeout = 2**retries
+            await asyncio.sleep(timeout)
             return
 
         self.logger.error(

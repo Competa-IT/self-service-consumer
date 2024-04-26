@@ -3,7 +3,7 @@
 
 from copy import deepcopy
 from datetime import datetime
-from unittest.mock import AsyncMock, patch, MagicMock, Mock
+from unittest.mock import AsyncMock, patch, MagicMock, Mock, call
 import pytest
 from client import AsyncClient, MessageHandler
 from shared.models import Message, PublisherName
@@ -188,5 +188,5 @@ class TestInvitation:
         )
         message_handler.run.assert_called_once_with()
         assert mock_post.call_count == 3
-        assert mock_sleep.call_count == 2
+        mock_sleep.assert_has_calls([call(2), call(4)])
         mock_sys_exit.assert_called_once_with(1)
