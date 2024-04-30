@@ -7,7 +7,6 @@ import os
 import sys
 from typing import Optional
 from aiohttp import (
-    ClientResponseError,
     ClientSession,
     ClientResponse,
     BasicAuth,
@@ -27,12 +26,9 @@ class Invitation:
         self.umc_server_url = os.environ.get("UMC_SERVER_URL", "http://umc-server")
         self.umc_admin_user = os.environ.get("UMC_ADMIN_USER", "admin")
         self.umc_admin_password = os.environ.get("UMC_ADMIN_PASSWORD")
-        self.provisioning_admin_username = os.environ.get("PROVISIONING_ADMIN_USERNAME")
-        self.provisioning_admin_password = os.environ.get("PROVISIONING_ADMIN_PASSWORD")
         self.provisioning_api_username = os.environ.get("PROVISIONING_API_USERNAME")
         self.provisioning_api_password = os.environ.get("PROVISIONING_API_PASSWORD")
         self.provisioning_api_base_url = os.environ.get("PROVISIONING_API_BASE_URL")
-        self.provisioning_realm_topic = ["udm", "users/user"]
 
     def configure_logging(self) -> None:
         console_handler = logging.StreamHandler(sys.stdout)
@@ -122,26 +118,12 @@ class Invitation:
         self.logger.info(
             "Starting the process of sending invitation emails via the UMC"
         )
-        admin_settings = Settings(
-            provisioning_api_username=self.provisioning_admin_username,
-            provisioning_api_password=self.provisioning_admin_password,
-            provisioning_api_base_url=self.provisioning_api_base_url,
-        )
+
         settings = Settings(
             provisioning_api_username=self.provisioning_api_username,
             provisioning_api_password=self.provisioning_api_password,
             provisioning_api_base_url=self.provisioning_api_base_url,
         )
-        async with AsyncClient(admin_settings) as admin_client:
-            try:
-                await admin_client.create_subscription(
-                    settings.provisioning_api_username,
-                    settings.provisioning_api_password,
-                    [self.provisioning_realm_topic],
-                    True,
-                )
-            except ClientResponseError as e:
-                self.logger.warning("%s, Client already exists", e)
 
         self.logger.info("Listening for newly created users")
         async with AsyncClient(settings) as client:

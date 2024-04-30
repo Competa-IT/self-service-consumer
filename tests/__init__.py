@@ -7,8 +7,6 @@ ENV_DEFAULTS = {
     "UMC_SERVER_URL": "http://umc-server",
     "UMC_ADMIN_USER": "admin",
     "UMC_ADMIN_PASSWORD": "adminpassword",
-    "PROVISIONING_ADMIN_USERNAME": "admin",
-    "PROVISIONING_ADMIN_PASSWORD": "provisioning",
     "PROVISIONING_API_USERNAME": "self-service",
     "PROVISIONING_API_PASSWORD": "selfservicepassword",
     "PROVISIONING_API_BASE_URL": "localhost",

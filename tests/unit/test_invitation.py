@@ -100,12 +100,6 @@ class TestInvitation:
 
         await invitation.start_the_process_of_sending_invitations()
 
-        async_client.create_subscription.assert_called_once_with(
-            ENV_DEFAULTS["PROVISIONING_API_USERNAME"],
-            ENV_DEFAULTS["PROVISIONING_API_PASSWORD"],
-            [["udm", "users/user"]],
-            True,
-        )
         message_handler.run.assert_called_once_with()
         mock_post.assert_called_once_with(
             f"{ENV_DEFAULTS['UMC_SERVER_URL']}/command/passwordreset/send_token",
@@ -126,12 +120,6 @@ class TestInvitation:
 
         await invitation.start_the_process_of_sending_invitations()
 
-        async_client.create_subscription.assert_called_once_with(
-            ENV_DEFAULTS["PROVISIONING_API_USERNAME"],
-            ENV_DEFAULTS["PROVISIONING_API_PASSWORD"],
-            [["udm", "users/user"]],
-            True,
-        )
         message_handler.run.assert_called_once_with()
         mock_post.assert_not_called()
 
@@ -154,12 +142,6 @@ class TestInvitation:
 
         await invitation.start_the_process_of_sending_invitations()
 
-        async_client.create_subscription.assert_called_once_with(
-            ENV_DEFAULTS["PROVISIONING_API_USERNAME"],
-            ENV_DEFAULTS["PROVISIONING_API_PASSWORD"],
-            [["udm", "users/user"]],
-            True,
-        )
         message_handler.run.assert_called_once_with()
         mock_post.assert_not_called()
 
@@ -180,12 +162,6 @@ class TestInvitation:
         with pytest.raises(Exception, match="SystemExit 1"):
             await invitation.start_the_process_of_sending_invitations()
 
-        async_client.create_subscription.assert_called_once_with(
-            ENV_DEFAULTS["PROVISIONING_API_USERNAME"],
-            ENV_DEFAULTS["PROVISIONING_API_PASSWORD"],
-            [["udm", "users/user"]],
-            True,
-        )
         message_handler.run.assert_called_once_with()
         assert mock_post.call_count == 3
         mock_sleep.assert_has_calls([call(2), call(4)])
