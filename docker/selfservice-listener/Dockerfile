@@ -29,11 +29,10 @@
 # <https://www.gnu.org/licenses/>.
 #
 
-ARG LISTENER_BASE_IMAGE_TAG=0.4.6
+ARG LISTENER_BASE_IMAGE_TAG=0.7.0
 ARG LISTENER_BASE_IMAGE=gitregistry.knut.univention.de/univention/customers/dataport/upx/container-listener-base/listener-base
 
 FROM ${LISTENER_BASE_IMAGE}:${LISTENER_BASE_IMAGE_TAG} as final
 
 COPY ./docker/selfservice-listener/entrypoint-ensure-volume-permissions.sh /entrypoint.d/25-ensure-volume-permissions.sh
 COPY ./listener/selfservice_listener.py /usr/lib/univention-directory-listener/system/
-
