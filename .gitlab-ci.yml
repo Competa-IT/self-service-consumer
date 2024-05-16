@@ -19,6 +19,10 @@ include:
 variables:
   POETRY_VERSION: "1.6.1"
 
+lint-pre-commit:
+  before_script:
+    - "helm repo add bitnami https://charts.bitnami.com/bitnami"
+
 .build-matrix: &build-matrix
   - IMAGE_NAME:
       - "selfservice-invitation"

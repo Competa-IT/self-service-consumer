@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2024 Univention GmbH
+
+---
+api:
+  auth:
+    password: "password"
+    username: "username"
+  connection:
+    baseUrl: "http://test-provisioning-api"
+umc:
+  auth:
+    password: "password"
+    username: "username"
+  connection:
+    baseUrl: "http://test-umc-server"

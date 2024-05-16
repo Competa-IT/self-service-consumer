@@ -2,16 +2,16 @@
 # SPDX-FileCopyrightText: 2024 Univention GmbH
 
 ---
+
 apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
 kind: Deployment
 metadata:
-  name: {{ printf "%s-selfservice-invitation" (include "common.names.fullname" .) }}
-  namespace: {{ include "common.names.namespace" . | quote }}
+  name: {{ include "common.names.fullname" . }}
   labels:
-    {{- include "common.labels.standard" . | nindent 4 }}
-    {{- if .Values.additionalLabels }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalLabels "context" . ) | nindent 4 }}
-    {{- end }}
+      {{- $commonLabels := include "common.labels.standard" . | fromYaml }}
+      {{- $uiLabels := dict "app.kubernetes.io/name" (include "common.names.fullname" .) }}
+      {{- $mergedLabels := merge $uiLabels $commonLabels}}
+      {{- toYaml $mergedLabels | nindent 4 }}
   {{- if .Values.additionalAnnotations }}
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
   {{- end }}
@@ -19,7 +19,9 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "common.labels.matchLabels" . | nindent 6 }}
+      {{- $commonLabels := include "common.labels.matchLabels" . | fromYaml }}
+      {{- $uiLabels := dict "app.kubernetes.io/name" (include "common.names.fullname" .) }}
+      {{- merge $uiLabels $commonLabels | toYaml | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -28,10 +30,15 @@ spec:
         {{- include "common.tplvalues.render" (dict "value" .Values.podAnnotations "context" .) | nindent 8 }}
         {{- end }}
       labels:
-        {{- include "common.labels.standard" . | nindent 8 }}
+        {{- $commonLabels := include "common.labels.matchLabels" . | fromYaml }}
+        {{- $uiLabels := dict "app.kubernetes.io/name" (include "common.names.fullname" .) }}
+        {{- merge $uiLabels $commonLabels | toYaml | nindent 8 }}
     spec:
-      {{- if .Values.imagePullSecrets  }}
+      {{- if or .Values.imagePullSecrets .Values.global.imagePullSecrets  }}
       imagePullSecrets:
+        {{- range .Values.global.imagePullSecrets }}
+        - name: "{{ . }}"
+        {{- end }}
         {{- range .Values.imagePullSecrets }}
         - name: "{{ . }}"
         {{- end }}
@@ -58,29 +65,41 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       {{- end }}
       containers:
-        - name: "selfservice-invitation"
+        - name: "selfservice-listener"
           {{- if .Values.containerSecurityContext.enabled }}
           securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
-          image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.imagePullPolicy | quote }}
+          image: "{{ coalesce .Values.image.registry .Values.global.imageRegistry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ coalesce .Values.image.imagePullPolicy .Values.global.imagePullPolicy | quote }}
+          command:
+            - /bin/bash
+            - -c
+            - |
+              set -euxo pipefail
+              env | sort
+              poetry run selfservice
+          env:
+            - name: UMC_ADMIN_PASSWORD
+            {{- include "selfservice-listener.umc.auth.password" . | nindent 14 }}
+            - name: PROVISIONING_API_PASSWORD
+            {{- include "selfservice-listener.provisioningApi.auth.password" . | nindent 14 }}
           envFrom:
             - configMapRef:
                 name: {{ printf "%s-common" (include "common.names.fullname" .) }}
-          {{- if .Values.credentialSecretName }}
-            - secretRef:
-                name: {{ .Values.credentialSecretName | quote }}
-          {{- end }}
           livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.livenessProbe "context" .) | nindent 12 }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.readinessProbe "context" .) | nindent 12 }}
           startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.startupProbe "context" .) | nindent 12 }}
           {{- if .Values.resources }}
-          resources: {{- include "common.tplvalues.render" (dict "value" .Values.resourcesient "context" .) | nindent 12 }}
+          resources: {{- include "common.tplvalues.render" (dict "value" .Values.resources "context" .) | nindent 12 }}
           {{- end }}
           {{- if .Values.lifecycleHooks }}
           lifecycle: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleHooks "context" .) | nindent 12 }}
           {{- end }}
-          {{- if .Values.image.extraArgs }}
-          args: {{ .Values.image.extraArgs | toYaml | nindent 12 }}
-          {{- end }}
-
+          volumeMounts:
+            {{- if .Values.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" .) | nindent 12 }}
+            {{- end }}
+      volumes:
+        {{- if .Values.extraVolumes }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumes  "context" .) | nindent 8 }}
+        {{- end }}

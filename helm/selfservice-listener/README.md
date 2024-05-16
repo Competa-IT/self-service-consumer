@@ -40,18 +40,6 @@ user an email to set their password.
 			<td></td>
 		</tr>
 		<tr>
-			<td>config</td>
-			<td>object</td>
-			<td><pre lang="json">
-{
-  "provisioningApiBaseUrl": "http://provisioning-api",
-  "umcServerUrl": "http://umc-server"
-}
-</pre>
-</td>
-			<td>Configuration of the selfservice listener</td>
-		</tr>
-		<tr>
 			<td>containerSecurityContext.allowPrivilegeEscalation</td>
 			<td>bool</td>
 			<td><pre lang="json">
@@ -137,6 +125,15 @@ true
 			<td></td>
 		</tr>
 		<tr>
+			<td>extraEnvVars</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>Optionally specify a secret to create (primarily intended to be used in development environments to provide custom certificates)</td>
+		</tr>
+		<tr>
 			<td>extraSecrets</td>
 			<td>list</td>
 			<td><pre lang="json">
@@ -155,13 +152,49 @@ true
 			<td></td>
 		</tr>
 		<tr>
+			<td>global.imagePullPolicy</td>
+			<td>string</td>
+			<td><pre lang="json">
+"IfNotPresent"
+</pre>
+</td>
+			<td>Define an ImagePullPolicy.  Ref.: https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy  "IfNotPresent" => The image is pulled only if it is not already present locally. "Always" => Every time the kubelet launches a container, the kubelet queries the container image registry to             resolve the name to an image digest. If the kubelet has a container image with that exact digest cached             locally, the kubelet uses its cached image; otherwise, the kubelet pulls the image with the resolved             digest, and uses that image to launch the container. "Never" => The kubelet does not try fetching the image. If the image is somehow already present locally, the            kubelet attempts to start the container; otherwise, startup fails.</td>
+		</tr>
+		<tr>
+			<td>global.imagePullSecrets</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>Credentials to fetch images from private registry Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/  imagePullSecrets:   - "docker-registry" </td>
+		</tr>
+		<tr>
+			<td>global.imageRegistry</td>
+			<td>string</td>
+			<td><pre lang="json">
+"gitregistry.knut.univention.de"
+</pre>
+</td>
+			<td>Container registry address.</td>
+		</tr>
+		<tr>
+			<td>global.nubusDeployment</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Indicates wether this chart is part of a Nubus deployment.</td>
+		</tr>
+		<tr>
 			<td>image.imagePullPolicy</td>
 			<td>string</td>
 			<td><pre lang="json">
-"Always"
+"IfNotPresent"
 </pre>
 </td>
-			<td></td>
+			<td>The pull policy of the container image.  This setting has higher precedence than global.imagePullPolicy.</td>
 		</tr>
 		<tr>
 			<td>image.registry</td>
@@ -170,7 +203,7 @@ true
 "gitregistry.knut.univention.de"
 </pre>
 </td>
-			<td></td>
+			<td>Container registry address. This setting has higher precedence than global.registry.</td>
 		</tr>
 		<tr>
 			<td>image.repository</td>
@@ -179,7 +212,7 @@ true
 "univention/customers/dataport/upx/selfservice-listener/selfservice-invitation"
 </pre>
 </td>
-			<td></td>
+			<td>The path to the container image.</td>
 		</tr>
 		<tr>
 			<td>image.tag</td>
@@ -188,7 +221,7 @@ true
 "latest"
 </pre>
 </td>
-			<td></td>
+			<td>The tag of the container image. (This is replaced with an appropriate value during the build process of the Helm chart.)</td>
 		</tr>
 		<tr>
 			<td>nameOverride</td>
@@ -225,6 +258,90 @@ true
 </pre>
 </td>
 			<td></td>
+		</tr>
+		<tr>
+			<td>provisioningApi.auth</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "credentialSecret": {
+    "key": "PROVISIONING_API_PASSWORD",
+    "name": ""
+  },
+  "password": "",
+  "username": "selfservice"
+}
+</pre>
+</td>
+			<td>Authentication parameters</td>
+		</tr>
+		<tr>
+			<td>provisioningApi.auth.credentialSecret</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "key": "PROVISIONING_API_PASSWORD",
+  "name": ""
+}
+</pre>
+</td>
+			<td>The name of the secret containing the password.</td>
+		</tr>
+		<tr>
+			<td>provisioningApi.auth.credentialSecret.key</td>
+			<td>string</td>
+			<td><pre lang="json">
+"PROVISIONING_API_PASSWORD"
+</pre>
+</td>
+			<td>The key where the password can be found.</td>
+		</tr>
+		<tr>
+			<td>provisioningApi.auth.credentialSecret.name</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>The name of the secret.</td>
+		</tr>
+		<tr>
+			<td>provisioningApi.auth.password</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>The password to authenticate with.</td>
+		</tr>
+		<tr>
+			<td>provisioningApi.auth.username</td>
+			<td>string</td>
+			<td><pre lang="json">
+"selfservice"
+</pre>
+</td>
+			<td>The username to authenticate with.</td>
+		</tr>
+		<tr>
+			<td>provisioningApi.connection</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "baseUrl": ""
+}
+</pre>
+</td>
+			<td>Connection parameters</td>
+		</tr>
+		<tr>
+			<td>provisioningApi.connection.baseUrl</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>The base URL the provisioning API is reachable at. (e.g. "https://provisioning-api")</td>
 		</tr>
 		<tr>
 			<td>replicaCount</td>
@@ -266,7 +383,7 @@ false
 			<td>serviceAccount.create</td>
 			<td>bool</td>
 			<td><pre lang="json">
-false
+true
 </pre>
 </td>
 			<td></td>
@@ -297,6 +414,90 @@ false
 </pre>
 </td>
 			<td></td>
+		</tr>
+		<tr>
+			<td>umc.auth</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "credentialSecret": {
+    "key": "UMC_ADMIN_PASSWORD",
+    "name": ""
+  },
+  "password": "",
+  "username": "Administrator"
+}
+</pre>
+</td>
+			<td>Authentication parameters</td>
+		</tr>
+		<tr>
+			<td>umc.auth.credentialSecret</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "key": "UMC_ADMIN_PASSWORD",
+  "name": ""
+}
+</pre>
+</td>
+			<td>The name of the secret containing the password.</td>
+		</tr>
+		<tr>
+			<td>umc.auth.credentialSecret.key</td>
+			<td>string</td>
+			<td><pre lang="json">
+"UMC_ADMIN_PASSWORD"
+</pre>
+</td>
+			<td>The key where the password can be found.</td>
+		</tr>
+		<tr>
+			<td>umc.auth.credentialSecret.name</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>The name of the secret.</td>
+		</tr>
+		<tr>
+			<td>umc.auth.password</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>The password to authenticate with.</td>
+		</tr>
+		<tr>
+			<td>umc.auth.username</td>
+			<td>string</td>
+			<td><pre lang="json">
+"Administrator"
+</pre>
+</td>
+			<td>The username to authenticate with.</td>
+		</tr>
+		<tr>
+			<td>umc.connection</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "baseUrl": ""
+}
+</pre>
+</td>
+			<td>Connection parameters</td>
+		</tr>
+		<tr>
+			<td>umc.connection.baseUrl</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>The base URL the UMC is reachable at. (e.g. "https://umc-server")</td>
 		</tr>
 	</tbody>
 </table>
