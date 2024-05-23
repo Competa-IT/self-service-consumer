@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.2](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.6.1...v0.6.2) (2024-05-23)
+
+
+### Bug Fixes
+
+* use global registry ([dd5b08a](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/dd5b08a656045abab315958a44bc63ba5a016322))
+
 ## [0.6.1](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.6.0...v0.6.1) (2024-05-23)
 
 
