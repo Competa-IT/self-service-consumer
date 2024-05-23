@@ -5,15 +5,15 @@
 
 include:
   - project: "univention/customers/dataport/upx/common-ci"
-    ref: "v1.25.0"
+    ref: "v1.30.5"
     file:
       - "defaults/stages.yaml"
-      - "defaults/souvap-workflow.yaml"
+      - "defaults/nubus-workflow.yaml"
       - "jobs/lint-pre-commit.yaml"
       - "jobs/lint-commit-messages.yaml"
       - "jobs/semantic-release-env.yaml"
-      - "jobs/container-build-souvap.yaml"
-      - "jobs/package-and-publish-helm-charts-souvap.yaml"
+      - "jobs/container-build-external.yaml"
+      - "jobs/package-and-publish-helm-charts-external.yaml"
       - "jobs/check-debian-updates.yaml"
 
 variables:
@@ -37,19 +37,15 @@ container-generate-sbom:
   parallel:
     matrix: *build-matrix
 
-container-sign:
+container-sign-external:
   parallel:
     matrix: *build-matrix
 
-container-security-scan:
+push-image-external:
   parallel:
     matrix: *build-matrix
 
-push-image-souvap:
-  parallel:
-    matrix: *build-matrix
-
-container-sign-souvap:
+container-sign-external:
   parallel:
     matrix: *build-matrix
 
@@ -77,4 +73,5 @@ test_selfservice-invitation:
       coverage_report:
         coverage_format: cobertura
         path: coverage.xml
+
 ...

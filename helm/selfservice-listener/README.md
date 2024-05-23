@@ -173,7 +173,7 @@ true
 			<td>global.imageRegistry</td>
 			<td>string</td>
 			<td><pre lang="json">
-"gitregistry.knut.univention.de"
+"artifacts.software-univention.de"
 </pre>
 </td>
 			<td>Container registry address.</td>
@@ -200,7 +200,7 @@ false
 			<td>image.registry</td>
 			<td>string</td>
 			<td><pre lang="json">
-"gitregistry.knut.univention.de"
+"artifacts.software-univention.de"
 </pre>
 </td>
 			<td>Container registry address. This setting has higher precedence than global.registry.</td>
@@ -209,7 +209,7 @@ false
 			<td>image.repository</td>
 			<td>string</td>
 			<td><pre lang="json">
-"univention/customers/dataport/upx/selfservice-listener/selfservice-invitation"
+"nubus-dev/images/selfservice-invitation"
 </pre>
 </td>
 			<td>The path to the container image.</td>

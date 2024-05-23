@@ -6,7 +6,7 @@ global:
   # -- Indicates wether this chart is part of a Nubus deployment.
   nubusDeployment: false
   # -- Container registry address.
-  imageRegistry: "gitregistry.knut.univention.de"
+  imageRegistry: "artifacts.software-univention.de"
   # -- Credentials to fetch images from private registry
   # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
   #
@@ -42,9 +42,9 @@ tolerations: []
 # Container image configuration
 image:
   # -- Container registry address. This setting has higher precedence than global.registry.
-  registry: "gitregistry.knut.univention.de"
+  registry: "artifacts.software-univention.de"
   # -- The path to the container image.
-  repository: "univention/customers/dataport/upx/selfservice-listener/selfservice-invitation"
+  repository: "nubus-dev/images/selfservice-invitation"
   # -- The pull policy of the container image.  This setting has higher precedence than global.imagePullPolicy.
   imagePullPolicy: "IfNotPresent"
   # -- The tag of the container image. (This is replaced with an appropriate value during the build process of the Helm chart.)
