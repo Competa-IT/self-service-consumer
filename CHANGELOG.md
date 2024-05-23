@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.6.0...v0.6.1) (2024-05-23)
+
+
+### Bug Fixes
+
+* README ([52f2819](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/52f281938393619772dcf6c58dc13739c28eeffc))
+
 ## [0.6.0](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.5.0...v0.6.0) (2024-05-22)
 
 
