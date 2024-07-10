@@ -76,7 +76,6 @@ spec:
             - -c
             - |
               set -euxo pipefail
-              env | sort
               poetry run selfservice
           env:
             - name: UMC_ADMIN_PASSWORD
