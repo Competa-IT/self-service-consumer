@@ -29,19 +29,10 @@
 # <https://www.gnu.org/licenses/>.
 #
 
-ARG UCS_BASE_IMAGE_TAG=0.12.0
-ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-520
+ARG LISTENER_BASE_IMAGE_TAG=0.7.0
+ARG LISTENER_BASE_IMAGE=gitregistry.knut.univention.de/univention/customers/dataport/upx/container-listener-base/listener-base
 
-FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} as final
+FROM ${LISTENER_BASE_IMAGE}:${LISTENER_BASE_IMAGE_TAG} as final
 
-WORKDIR /app
-
-RUN apt-get update -qq && \
-    apt-get --assume-yes --verbose-versions --no-install-recommends install \
-      python3=3.11.* \
-      python3-requests=2.28.* && \
-    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
-
-COPY ./invitation/__main__.py /app
-
-CMD ["/usr/bin/python3", "__main__.py"]
+COPY ./docker/selfservice-listener/entrypoint-ensure-volume-permissions.sh /entrypoint.d/25-ensure-volume-permissions.sh
+COPY ./listener/selfservice_listener.py /usr/lib/univention-directory-listener/system/

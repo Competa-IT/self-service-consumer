@@ -1,3 +1,4 @@
+#!/bin/bash
 # Like what you see? Join us!
 # https://www.univention.com/about-us/careers/vacancies/
 #
@@ -29,19 +30,13 @@
 # <https://www.gnu.org/licenses/>.
 #
 
-ARG UCS_BASE_IMAGE_TAG=0.12.0
-ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-520
+set -euxo pipefail
 
-FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} as final
+cache_dir="/var/cache/listener"
+current_owner="$(stat -c "%U" "${cache_dir}")"
 
-WORKDIR /app
-
-RUN apt-get update -qq && \
-    apt-get --assume-yes --verbose-versions --no-install-recommends install \
-      python3=3.11.* \
-      python3-requests=2.28.* && \
-    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
-
-COPY ./invitation/__main__.py /app
-
-CMD ["/usr/bin/python3", "__main__.py"]
+if [ "${current_owner}" != "listener" ]
+then
+    echo "Trying to adjust owner of directory ${cache_dir}"
+    chown -R listener: "${cache_dir}"
+fi
