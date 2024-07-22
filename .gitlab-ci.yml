@@ -5,7 +5,7 @@
 
 include:
   - project: "univention/customers/dataport/upx/common-ci"
-    ref: "v1.30.5"
+    ref: "v1.31.1"
     file:
       - "defaults/stages.yaml"
       - "defaults/nubus-workflow.yaml"
@@ -16,14 +16,11 @@ include:
       - "jobs/package-and-publish-helm-charts-external.yaml"
       - "jobs/check-debian-updates.yaml"
 
-variables:
-  POETRY_VERSION: "1.6.1"
-
-lint-pre-commit:
-  before_script:
-    - "helm repo add bitnami https://charts.bitnami.com/bitnami"
-
 .build-matrix: &build-matrix
+  - IMAGE_NAME:
+      - "selfservice-listener"
+    KANIKO_BUILD_CONTEXT: $CI_PROJECT_DIR
+    DOCKERFILE_PATH: "docker/selfservice-listener/Dockerfile"
   - IMAGE_NAME:
       - "selfservice-invitation"
     KANIKO_BUILD_CONTEXT: $CI_PROJECT_DIR
@@ -45,33 +42,9 @@ push-image-external:
   parallel:
     matrix: *build-matrix
 
-container-sign-external:
-  parallel:
-    matrix: *build-matrix
-
 check-debian-updates:
   parallel:
     matrix: *build-matrix
   variables:
     TARGET_IMAGE: "${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest"
-
-test_selfservice-invitation:
-  stage: test
-  image: docker-registry.knut.univention.de/python:3.11-slim
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "schedule"'
-      when: "never"
-    - when: "on_success"
-  script:
-    - pip install poetry=="$POETRY_VERSION"
-    - poetry config --local virtualenvs.create false
-    - poetry install --with dev
-    - pytest --cov --cov-report=term --cov-report=xml:coverage.xml --cov-branch
-  coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
-  artifacts:
-    reports:
-      coverage_report:
-        coverage_format: cobertura
-        path: coverage.xml
-
 ...
