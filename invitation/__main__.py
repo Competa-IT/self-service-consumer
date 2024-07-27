@@ -83,13 +83,11 @@ class SelfServiceConsumer:
 
         if response.status == 200:
             self.logger.info("Email invitation was triggered")
-            self.logger.debug(response_data)
             return True
 
         self.logger.error(
-            "There was an error requesting a user invitation email. UMC-Server status: %s, response:  %r",
+            "There was an error requesting a user invitation email. UMC-Server status: %s",
             response.status,
-            response_data,
         )
         return False
 
@@ -149,13 +147,14 @@ class SelfServiceConsumer:
             if await self.send_email_invitation(username):
                 return
 
+            timeout = min(2**retries / 10, 30)
+            await asyncio.sleep(timeout)
+
             self.logger.info(
                 "Failed sending the invitation email for %s %s times",
                 username,
                 retries,
             )
-            timeout = min(2**retries / 10, 30)
-            await asyncio.sleep(timeout)
 
         self.logger.error(
             "Maximum retries of %s reached for user %s. Check the UMC-Server logs for more information",
