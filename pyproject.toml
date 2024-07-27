@@ -18,7 +18,7 @@ pydantic = "^2.3.0"
 pydantic-settings = "^2.0.3"
 
 [tool.poetry.scripts]
-selfservice = "invitation.__main__:run"
+selfservice = "invitation.__main__:main"
 
 [tool.poetry.group.dev]
 optional = true
