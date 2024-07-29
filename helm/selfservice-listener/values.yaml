@@ -143,4 +143,5 @@ ldap:
   credentialSecret:
     name: ""
     ldapPasswordKey: "ldap.secret"
+    machinePasswordKey: "machine.secret"
 ...
