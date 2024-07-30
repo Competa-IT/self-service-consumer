@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.6.5](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.6.4...v0.6.5) (2024-07-30)
+
+
+### Bug Fixes
+
+* fix containers name ([f86159e](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/f86159e14c427b397db9cf0497f90fcc4f31be77))
+* missing configuration for machine.secret ([2c73e11](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/2c73e11e40d15686f1c7cbc7c258269cadff5e21))
+* UMC credentials ([1f758d2](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/1f758d2217b6bbeb118e793bd9ff5ac8180db1e3))
+* UMC crendentials in wrong container ([45ee29d](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/45ee29dd0a52da9d19957048c1e0039849c577f3))
+* use LDAP primary and remove machine.secret ([4be43bd](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/4be43bdee982ba5090e119ea2b645ea0d525ddbc))
+
 ## [0.6.4](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.6.3...v0.6.4) (2024-07-24)
 
 
