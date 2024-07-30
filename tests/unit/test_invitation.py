@@ -3,12 +3,21 @@
 
 from copy import deepcopy
 from datetime import datetime
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, Mock, patch
+from aiohttp import BasicAuth
 import pytest
 from client import AsyncClient, MessageHandler, Settings
 from shared.models import Message, ProvisioningMessage, PublisherName
 from invitation.__main__ import InvalidMessageSchema, SelfServiceConsumer
 from invitation.config import SelfServiceConsumerSettings
+
+
+class AsyncContextManagerMock(MagicMock):
+    async def __aenter__(self):
+        return self.aenter()
+
+    async def __aexit__(self, *args):
+        pass
 
 
 class MockedResponse(MagicMock):
@@ -35,6 +44,9 @@ MESSAGE = Message(
         "old": None,
     },
 )
+MESSAGE_INVALID_BODY = deepcopy(MESSAGE)
+MESSAGE_INVALID_BODY.body = {}
+
 MESSAGE_OLD_USER = deepcopy(MESSAGE)
 MESSAGE_OLD_USER.body["old"] = {"properties": {"username": USERNAME}}
 
@@ -171,19 +183,36 @@ async def test_valid_provisioning_message(
     selfservice_consumer.send_email_invitation.assert_awaited_once_with("jblob")
 
 
-# @pytest.mark.anyio
-# async def test_send_email(
-#     selfservice_consumer: SelfServiceConsumer,
-#     mock_provisioning_client: AsyncClient,
-# ):
-#     mock_post.assert_called_once_with(
-#         f"{ENV_DEFAULTS['UMC_SERVER_URL']}/command/passwordreset/send_token",
-#         json={"options": {"username": USERNAME, "method": "email"}},
-#         auth=BasicAuth(
-#             ENV_DEFAULTS["UMC_ADMIN_USER"], ENV_DEFAULTS["UMC_ADMIN_PASSWORD"]
-#         ),
-#     )
-#     selfservice_consumer.send_email()
+@pytest.mark.anyio
+async def test_send_email(
+    selfservice_consumer: SelfServiceConsumer,
+    selfservice_consumer_settings: SelfServiceConsumerSettings,
+):
+    mock_post = AsyncMock()
+    mock_post.__aenter__.return_value = MockedResponse(200, {})
+
+    # Mock for the context manager that will be used inside the outer context manager
+    mock_post_cm = Mock(return_value=mock_post)
+
+    meta = AsyncMock()
+    meta.post = mock_post_cm
+
+    client_session_instance = AsyncMock()
+    client_session_instance.__aenter__.return_value = meta
+    client_session = Mock(return_value=client_session_instance)
+
+    with patch("invitation.__main__.ClientSession", client_session):
+        await selfservice_consumer.send_email(USERNAME)
+
+    mock_post_cm.assert_called_once_with(
+        f"{selfservice_consumer_settings.umc_server_url}/command/passwordreset/send_token",
+        json={"options": {"username": USERNAME, "method": "email"}},
+        auth=BasicAuth(
+            selfservice_consumer_settings.umc_admin_user,
+            selfservice_consumer_settings.umc_admin_password,
+        ),
+    )
+    mock_post.__aenter__.assert_called_once()
 
 
 @pytest.mark.anyio
@@ -205,7 +234,7 @@ async def test_message_filtering(
 @pytest.mark.anyio
 @pytest.mark.parametrize(
     "message",
-    [MESSAGE_NO_EMAIL, MESSAGE_NO_USERNAME],
+    [MESSAGE_NO_EMAIL, MESSAGE_NO_USERNAME, MESSAGE_INVALID_BODY],
 )
 async def test_invalid_message_schema(
     message: Message,
@@ -234,26 +263,3 @@ async def test_valid_retry_values(
     assert excinfo.value.code == 1
     assert selfservice_consumer.send_email_invitation.call_count == retries + 1
     assert mock_sleep.call_count == retries
-
-    # @patch("invitation.__main__.asyncio.sleep")
-    # @patch("invitation.__main__.sys.exit")
-    # async def test_error_during_sending_email(
-    #     self,
-    #     mock_sys_exit,
-    #     mock_sleep,
-    #     mock_post,
-    #     async_client: AsyncClient,
-    #     message_handler: MessageHandler,
-    # ):
-    #     invitation = SelfServiceConsumer()
-    #     mock_sys_exit.side_effect = Exception("SystemExit 1")
-    #     mock_post.return_value.__aenter__.return_value = MockedResponse(500, {})
-    #     message_handler.run = Mock(return_value=invitation.handle_new_user(MESSAGE))
-    #     with pytest.raises(Exception, match="SystemExit 1"):
-    #         await invitation.start_the_process_of_sending_invitations()
-    #
-    #     async_client.assert_called_once_with()
-    #     message_handler.run.assert_called_once_with()
-    #     assert mock_post.call_count == 3
-    #     mock_sleep.assert_has_calls([call(2), call(4)])
-    #     mock_sys_exit.assert_called_once_with(1)
