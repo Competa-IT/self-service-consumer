@@ -38,12 +38,6 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: '{{ coalesce .Values.selfserviceListener.image.registry .Values.global.imageRegistry }}/{{ .Values.selfserviceListener.image.repository }}{{ if .Values.selfserviceListener.image.sha256 }}@sha256:{{ .Values.selfserviceListener.image.sha256 }}{{ else }}:{{ .Values.selfserviceListener.image.tag }}{{ end }}'
           imagePullPolicy: '{{ .Values.global.imagePullPolicy }}'
-          env:
-            - name: "UMC_ADMIN_PASSWORD"
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ include "selfserviceListener.umcAdminPasswordSecret.name" . }}"
-                  key: "{{ include "selfserviceListener.umcAdminPasswordSecret.key" . }}"
           envFrom:
             - configMapRef:
                 name: '{{ include "common.names.fullname" . }}'
@@ -67,6 +61,12 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: '{{ coalesce .Values.selfserviceInvitation.image.registry .Values.global.imageRegistry }}/{{ .Values.selfserviceInvitation.image.repository }}{{ if .Values.selfserviceInvitation.image.sha256 }}@sha256:{{ .Values.selfserviceInvitation.image.sha256 }}{{ else }}:{{ .Values.selfserviceInvitation.image.tag }}{{ end }}'
           imagePullPolicy: '{{ .Values.global.imagePullPolicy }}'
+          env:
+            - name: "UMC_ADMIN_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ include "selfserviceListener.umcAdminPasswordSecret.name" . }}"
+                  key: "{{ include "selfserviceListener.umcAdminPasswordSecret.key" . }}"
           envFrom:
             - configMapRef:
                 name: '{{ include "common.names.fullname" . }}'
