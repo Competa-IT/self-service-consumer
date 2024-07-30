@@ -574,7 +574,7 @@ null
 			<td>selfserviceListener.umcAdminUser</td>
 			<td>string</td>
 			<td><pre lang="json">
-""
+"Administrator"
 </pre>
 </td>
 			<td></td>

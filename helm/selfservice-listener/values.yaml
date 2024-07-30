@@ -71,7 +71,7 @@ selfserviceListener:
   tlsMode: "off"
 
   umcServerUrl: ""
-  umcAdminUser: ""
+  umcAdminUser: "Administrator"
   secretMountPath: "/var/secrets"
   umcAdminPasswordSecret:
     name: ""

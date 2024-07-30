@@ -75,7 +75,7 @@ These template definitions are only used in this chart and do not relate to temp
 {{- if .Values.selfserviceListener.umcAdminPasswordSecret.name -}}
 {{- .Values.selfserviceListener.umcAdminPasswordSecret.name -}}
 {{- else if .Values.global.nubusDeployment -}}
-{{- printf "%s-self-service-ldap-credentials" .Release.Name -}}
+{{- printf "%s-nubus-credentials" .Release.Name -}}
 {{- else -}}
 {{- required ".Values.selfserviceListener.umcAdminPasswordSecret.name is required" .Values.selfserviceListener.umcAdminPasswordSecret.name -}}
 {{- end -}}
@@ -85,7 +85,7 @@ These template definitions are only used in this chart and do not relate to temp
 {{- if .Values.selfserviceListener.umcAdminPasswordSecret.key -}}
 {{- .Values.selfserviceListener.umcAdminPasswordSecret.key -}}
 {{- else if .Values.global.nubusDeployment -}}
-password
+admin_password
 {{- else -}}
 {{- required ".Values.selfserviceListener.umcAdminPasswordSecret.key is required" .Values.selfserviceListener.umcAdminPasswordSecret.key -}}
 {{- end -}}
