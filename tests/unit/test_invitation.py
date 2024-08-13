@@ -8,8 +8,9 @@ from unittest.mock import AsyncMock, MagicMock, Mock, patch
 import pytest
 from aiohttp import BasicAuth
 
-from invitation.__main__ import InvalidMessageSchema, SelfServiceConsumer
+from invitation.__main__ import start_consumer
 from invitation.config import SelfServiceConsumerSettings
+from invitation.consumer import InvalidMessageSchema, SelfServiceConsumer
 from univention.provisioning.consumer import (
     MessageHandler,
     ProvisioningConsumerClient,
@@ -186,9 +187,10 @@ async def test_invalid_requests(
     selfservice_consumer.send_email_invitation = AsyncMock()
 
     with pytest.raises(EscapeLoopException):
-        await selfservice_consumer.start_consumer(
+        await start_consumer(
             mock_constructor_factory(mock_provisioning_client),
             mock_constructor_factory(mock_message_handler),
+            selfservice_consumer.handle_user_event,
         )
 
     selfservice_consumer.send_email_invitation.assert_not_awaited()
@@ -208,9 +210,10 @@ async def test_valid_provisioning_message(
     selfservice_consumer.send_email_invitation = AsyncMock()
 
     with pytest.raises(EscapeLoopException):
-        await selfservice_consumer.start_consumer(
+        await start_consumer(
             mock_constructor_factory(mock_provisioning_client),
             mock_constructor_factory(mock_message_handler),
+            selfservice_consumer.handle_user_event,
         )
     selfservice_consumer.send_email_invitation.assert_awaited_once_with("jblob")
 
@@ -233,11 +236,11 @@ async def test_send_email(
     client_session_instance.__aenter__.return_value = meta
     client_session = Mock(return_value=client_session_instance)
 
-    with patch("invitation.__main__.ClientSession", client_session):
+    with patch("invitation.consumer.ClientSession", client_session):
         await selfservice_consumer.send_email(USERNAME)
 
     mock_post_cm.assert_called_once_with(
-        f"{selfservice_consumer_settings.umc_server_url}/command/passwordreset/send_token",
+        url=f"{selfservice_consumer_settings.umc_server_url}/command/passwordreset/send_token",
         json={"options": {"username": USERNAME, "method": "email"}},
         auth=BasicAuth(
             selfservice_consumer_settings.umc_admin_user,
