@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.7.0](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.6.5...v0.7.0) (2024-08-14)
+
+
+### Features
+
+* update nubus-provisioning-consumer lib to use Body model ([de0e85f](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/de0e85fddc36dcfc33d1ff64dff2affaa82aa1b6))
+
+
+### Bug Fixes
+
+* add new config values to the helm chart ([cfc10c1](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/cfc10c1e6ef1e03b52204d93aad96cc1467d2010))
+* add pydantic to the python dependencies ([57dcf0b](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/57dcf0b2a1c10ebdcf763e0cc6421b7918721909))
+* cleanup ([5752cdb](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/5752cdb1047de7512e2f42a6d43d00fab15c7c1d))
+* don't sleep after the last retry, but fail immediately ([39775d3](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/39775d38b4e1b191a519cc5b7c8613692a7b4eb3))
+* UMC 503 errors throw exceptions when trying to read the response message ([0272d25](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/0272d25a426c2e0b058f59e629d69b708ba69146))
+* update is_create_event method to handle empty dictionaries ([fe97e48](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/fe97e4847827a980e50799439d4bcb9d42663f1f))
+* update nubus-provisioning-consumer lib version ([c552d86](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/c552d867c7af1e5ebf4bba8307273c61955c1941))
+* update secret handling to selfservice-consumer requirements ([15e2052](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/15e20527d4be493bdfabf2cef46f7db2128cfee3))
+
+
+### Reverts
+
+* "fix: secret handling and nubus umbrella integration" ([507318c](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/507318c9c20fcfebb90b93f91bce7a53f6e4aa25))
+* "revert: provisioning to listener/notifier" ([00326cf](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/00326cf6edfd2cab78655b22cee5ee448bfb8c16))
+
 ## [0.6.5](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.6.4...v0.6.5) (2024-07-30)
 
 
