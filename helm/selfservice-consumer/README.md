@@ -1,6 +1,6 @@
-# selfservice-listener
+# selfservice-consumer
 
-The selfservice listener for handling user invites
+The selfservice consumer for handling user invites
 
 - **Version**: 0.1.0
 - **Type**: application

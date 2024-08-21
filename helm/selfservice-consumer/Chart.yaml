@@ -4,8 +4,8 @@
 ---
 
 apiVersion: v2
-name: "selfservice-listener"
-description: "The selfservice listener for handling user invites"
+name: "selfservice-consumer"
+description: "The selfservice consumer for handling user invites"
 
 type: "application"
 
