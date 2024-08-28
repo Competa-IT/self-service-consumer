@@ -15,7 +15,7 @@ from aiohttp import (
 )
 
 from invitation.config import SelfServiceConsumerSettings, get_selfservice_consumer_settings
-from univention.provisioning.models import Body, Message
+from univention.provisioning.models import Body, ProvisioningMessage
 
 logger = logging.getLogger(__name__)
 
@@ -92,9 +92,15 @@ class SelfServiceConsumer:
                 "Make sure that the selfservice udm extensions are installed in all necessary place.",
             )
 
-    async def handle_user_event(self, message: Message) -> None:
+    async def handle_user_event(self, message: ProvisioningMessage) -> None:
         message_body = message.body
-        logger.debug("Received the message with the content: %s", message_body)
+        logger.info(
+            "Received message with topic: %s, sequence_number: %d, num_delivered: %d",
+            message.topic,
+            message.sequence_number,
+            message.num_delivered,
+        )
+        logger.debug("Message body: %r", message_body)
 
         if not self.is_create_event(message_body):
             logger.debug("Ignoring the message because it is not a create event.")

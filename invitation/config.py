@@ -11,7 +11,7 @@ Loglevel = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 
 
 class SelfServiceConsumerSettings(BaseSettings):
-    log_level: Loglevel
+    log_level: Loglevel = "INFO"
     max_umc_request_retries: Annotated[int, Field(ge=0, le=10)]
     umc_server_url: str
     umc_admin_user: str
