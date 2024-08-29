@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.2](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.7.1...v0.7.2) (2024-08-29)
+
+
+### Bug Fixes
+
+* update nubus-provisioning-consumer to use ProvisioningMessage model ([3c7cdcd](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/3c7cdcd8605aed1611b9f899f0337aa4e90a0205))
+
 ## [0.7.1](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.7.0...v0.7.1) (2024-08-21)
 
 
