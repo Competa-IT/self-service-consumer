@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.8.0...v0.9.0) (2024-09-18)
+
+
+### Features
+
+* remove umc admin credentials ([dcd299d](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/dcd299d0a75e3502765ff6c83ea8c29ec4110de7))
+
 ## [0.8.0](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.7.3...v0.8.0) (2024-09-16)
 
 
