@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.1](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.11.0...v0.11.1) (2024-09-26)
+
+
+### Bug Fixes
+
+* bump Provisioning client version, adapt to new subscriptions format ([97d29bf](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/97d29bf6139f7a0756cf082efe8aa44a212321c2))
+
 ## [0.11.0](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.10.0...v0.11.0) (2024-09-26)
 
 
