@@ -41,42 +41,6 @@ These template definitions are only used in this chart and do not relate to temp
 {{- end -}}
 {{- end -}}
 
-{{- define "selfservice-listener.umc.auth.username" -}}
-{{- if .Values.umc.auth.username -}}
-{{- .Values.umc.auth.username -}}
-{{- else -}}
-{{- required ".Values.umc.auth.username must be defined." .Values.umc.auth.username -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "selfservice-listener.umc.auth.credentialSecret.name" -}}
-{{- if .Values.umc.auth.credentialSecret.name -}}
-{{- .Values.umc.auth.credentialSecret.name -}}
-{{- else if .Values.umc.auth.password -}}
-{{ printf "%s-umc-credentials" (include "common.names.fullname" .) }}
-{{- else if .Values.global.nubusDeployment -}}
-{{- printf "%s-selfservice-listener-credentials" .Release.Name -}}
-{{- else -}}
-{{ required ".Values.umc.auth.password must be defined." .Values.umc.auth.password}}
-{{- end -}}
-{{- end -}}
-
-{{- define "selfservice-listener.umc.auth.password" -}}
-{{- if .Values.umc.auth.credentialSecret.name -}}
-valueFrom:
-  secretKeyRef:
-    name: {{ .Values.umc.auth.credentialSecret.name | quote }}
-    key: {{ .Values.umc.auth.credentialSecret.key | quote }}
-{{- else if .Values.global.nubusDeployment -}}
-valueFrom:
-  secretKeyRef:
-    name: {{ include "selfservice-listener.umc.auth.credentialSecret.name" . | quote }}
-    key: {{ .Values.umc.auth.credentialSecret.key | quote }}
-{{- else -}}
-value: {{ required ".Values.umc.auth.password is required." .Values.umc.auth.password | quote }}
-{{- end -}}
-{{- end -}}
-
 {{- define "selfservice-listener.provisioningApi.auth.credentialSecret.name" -}}
 {{- if .Values.provisioningApi.auth.credentialSecret.name -}}
 {{- .Values.provisioningApi.auth.credentialSecret.name -}}
