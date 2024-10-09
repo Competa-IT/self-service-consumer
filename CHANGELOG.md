@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.3](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.11.2...v0.11.3) (2024-10-09)
+
+
+### Bug Fixes
+
+* remove duplicated key ([da39908](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/da39908116d667f371f87d9e965dd2cc06ecf404))
+
 ## [0.11.2](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.11.1...v0.11.2) (2024-10-03)
 
 
