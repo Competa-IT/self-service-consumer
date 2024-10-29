@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.0](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.11.3...v0.12.0) (2024-10-29)
+
+
+### Features
+
+* secrets refactoring ([1d750bc](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/1d750bcb21be7a562cb3e97a18923d6f5e00cad2)), closes [univention/customers/dataport/team-souvap#891](https://git.knut.univention.de/univention/customers/dataport/team-souvap/issues/891)
+
 ## [0.11.3](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.11.2...v0.11.3) (2024-10-09)
 
 
