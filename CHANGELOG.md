@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.2](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.12.1...v0.12.2) (2024-11-27)
+
+
+### Bug Fixes
+
+* kyverno lint ([9deaa5e](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/9deaa5e6ecb5da2a9eadff2bb480c74915a63349))
+
 ## [0.12.1](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.12.0...v0.12.1) (2024-11-01)
 
 
