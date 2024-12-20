@@ -29,7 +29,7 @@
 # <https://www.gnu.org/licenses/>.
 #
 
-ARG UCS_BASE_IMAGE_TAG=0.13.1-post-main-build-2024-09-09
+ARG UCS_BASE_IMAGE_TAG=0.14.0-build-2024-12-12
 ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-520
 
 ARG WORKDIR="/app"
@@ -43,7 +43,7 @@ RUN useradd -m "$USER"
 RUN chown "$USER":"$USER" "$WORKDIR" \
     && apt-get -qq update \
     && apt-get --assume-yes --verbose-versions --no-install-recommends install \
-      python3-pip=23.* \
+      python3-pip \
     && rm -fr /var/lib/apt/lists/* /var/cache/apt/archives/*
 USER "$USER"
 ENV \
