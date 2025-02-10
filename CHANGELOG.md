@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.1](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.13.0...v0.13.1) (2025-02-10)
+
+
+### Bug Fixes
+
+* add .kyverno to helmignore ([162de34](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/162de34a45c0aa903c64af5ae1199ac1326af510))
+
 ## [0.13.0](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.12.3...v0.13.0) (2024-12-20)
 
 
