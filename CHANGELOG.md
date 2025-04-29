@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.15.0](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.14.0...v0.15.0) (2025-04-29)
+
+
+### Features
+
+* Bump ucs-base-image to 5.2-1 ([25f0e96](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/25f0e969f8955c87c2bc36e1a30d9b67e921e2f4)), closes [univention/dev/internal/team-nubus#1155](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1155)
+
+
+### Bug Fixes
+
+* final version of wait-for-dependency ([6edff24](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/commit/6edff24cb39d6cc944493170514a6444c9c47b71)), closes [univention/dev/internal/team-nubus#1155](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1155)
+
 ## [0.14.0](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.13.1...v0.14.0) (2025-02-26)
 
 
