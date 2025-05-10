@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.15.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/compare/v0.15.0...v0.15.1) (2025-05-10)
+
+
+### Bug Fixes
+
+* move addlicense pre-commit hook ([499d97c](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/commit/499d97cc56080587487570bc3adc810e144c6acc))
+* update common-ci to main ([93fd94c](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/commit/93fd94cb66745f2d15e37ff7736f5f1d773d9037))
+
 ## [0.15.0](https://git.knut.univention.de/univention/customers/dataport/upx/selfservice-listener/compare/v0.14.0...v0.15.0) (2025-04-29)
 
 
