@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/compare/v0.15.1...v0.16.0) (2025-05-11)
+
+
+### Features
+
+* move and upgrade ucs-base-image to 0.17.3-build-2025-05-11 ([c7418d8](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/commit/c7418d88b3ee282e9778ba23d8e9b3780cae216f))
+
 ## [0.15.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/compare/v0.15.0...v0.15.1) (2025-05-10)
 
 
