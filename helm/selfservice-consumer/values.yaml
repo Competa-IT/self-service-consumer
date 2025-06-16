@@ -46,14 +46,14 @@ image:
   # -- The path to the container image.
   repository: "nubus-dev/images/selfservice-invitation"
   # -- The pull policy of the container image.  This setting has higher precedence than global.imagePullPolicy.
-  imagePullPolicy: "IfNotPresent"
+  pullPolicy: ""
   # -- The tag of the container image. (This is replaced with an appropriate value during the build process of the Helm chart.)
   tag: "latest"
 
 waitForDependency:
   image:
     registry: ""
-    imagePullPolicy: "IfNotPresent"
+    pullPolicy: ""
     repository: "nubus/images/wait-for-dependency"
     tag: "0.32.1@sha256:44d45067e1d4e7a00d3b651e56df5177087e3206368a45cd1816d78ba7b21347"
 
