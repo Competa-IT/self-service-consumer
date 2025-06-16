@@ -131,14 +131,13 @@ provisioningApi:
   # -- Connection parameters
   connection:
     # -- The base URL the provisioning API is reachable at. (e.g. "https://provisioning-api")
-    baseUrl: ""
+    url: ""
   # -- Authentication parameters
   auth:
     # -- The username to authenticate with.
-    username: null
+    username: "selfservice"
     # -- The password to authenticate with.
-    # TODO: Make the password configurable by moving the secret manifest generation into the component charts.
-    # password: ""
+    password: null
     # -- The name of the secret containing the password.
     existingSecret:
       name: null

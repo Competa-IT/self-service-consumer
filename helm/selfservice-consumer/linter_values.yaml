@@ -4,18 +4,12 @@
 ---
 provisioningApi:
   auth:
-    username: "username"
-    existingSecret:
-      name: "custom-secret-name"
-      keyMapping:
-        password: "custom-secret-key"
+    password: "linter-password"
   connection:
-    baseUrl: "http://test-provisioning-api"
+    url: "http://test-provisioning-api"
 umc:
   auth:
     password: "password"
     username: "username"
   connection:
     baseUrl: "http://test-umc-server"
-
-...

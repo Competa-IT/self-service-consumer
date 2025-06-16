@@ -16,6 +16,7 @@ metadata:
 data:
   LOG_LEVEL: {{ required ".Values.selfserviceListener.config.logLevel is required." .Values.selfserviceListener.config.logLevel | quote  }}
   MAX_UMC_REQUEST_RETRIES: {{ required ".Values.selfserviceListener.config.maxUmcRequestRetries is required." .Values.selfserviceListener.config.maxUmcRequestRetries | quote  }}
-  PROVISIONING_API_BASE_URL: {{ include "selfservice-listener.provisioningApi.connection.baseUrl" . | quote }}
+  PROVISIONING_API_BASE_URL: "{{- tpl (required "The Provisioning API connection has to be configured, provisioningApi.connection.url." .Values.provisioningApi.connection.url) . -}}"
+  PROVISIONING_API_USERNAME: "{{- tpl (required "A Provisioning API username has to be supplied, see parameter provisioningApi.auth.username" .Values.provisioningApi.auth.username) . -}}"
   UMC_SERVER_URL: {{ include "selfservice-listener.umc.connection.baseUrl" . | quote }}
   MAX_ACKNOWLEDGEMENT_RETRIES: {{ required "The parameter \".Values.provisioningApi.config.maxAcknowledgementRetries\" is required." .Values.provisioningApi.config.maxAcknowledgementRetries | quote }}
