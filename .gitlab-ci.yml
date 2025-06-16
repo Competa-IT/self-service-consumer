@@ -34,6 +34,14 @@ container-sign-external:
   parallel:
     matrix: *build-matrix
 
+test-chart-selfservice-consumer:
+  stage: test
+  needs: []
+  image: "gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.21.0"
+  script:
+    - helm dep build helm/selfservice-consumer
+    - pytest -W error tests/chart
+
 push-image-external:
   parallel:
     matrix: *build-matrix
@@ -43,4 +51,3 @@ check-debian-updates:
     matrix: *build-matrix
   variables:
     TARGET_IMAGE: "${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest"
-...
