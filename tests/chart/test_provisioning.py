@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2025 Univention GmbH
 
-from univention.testing.helm.client.provisioning_api import Auth, Connection
+from univention.testing.helm.client.provisioning_api import Auth, Connection, SecretViaEnv
 
 
-class TestAuth(Auth):
+class TestAuth(SecretViaEnv, Auth):
 
     config_map_name = "release-name-selfservice-consumer-common"
     secret_name = "release-name-selfservice-consumer-provisioning-api"
