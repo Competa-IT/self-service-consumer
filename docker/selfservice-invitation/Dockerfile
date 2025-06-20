@@ -29,8 +29,8 @@
 # <https://www.gnu.org/licenses/>.
 #
 
-ARG UCS_BASE_IMAGE_TAG=0.17.3-build-2025-05-11
-ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-521
+ARG UCS_BASE_IMAGE_TAG=0.18.2-build-2025-06-12
+ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-522
 
 ARG WORKDIR="/app"
 
@@ -41,25 +41,25 @@ WORKDIR ${WORKDIR}
 ARG USER=selfservice
 RUN useradd -m "$USER"
 RUN chown "$USER":"$USER" "$WORKDIR" \
-    && apt-get -qq update \
-    && apt-get --assume-yes --verbose-versions --no-install-recommends install \
-      python3-pip \
-    && rm -fr /var/lib/apt/lists/* /var/cache/apt/archives/*
+  && apt-get -qq update \
+  && apt-get --assume-yes --verbose-versions --no-install-recommends install \
+  python3-pip \
+  && rm -fr /var/lib/apt/lists/* /var/cache/apt/archives/*
 USER "$USER"
 ENV \
-    PATH="/home/${USER}/.local/bin:${PATH}" \
-    PYTHONPATH="." \
-    WEB_CONCURRENCY=1 \
-    # Do not buffer `stdout`
-    PYTHONUNBUFFERED=1 \
-    # Do not create `.pyc` files
-    PYTHONDONTWRITEBYTECODE=1 \
-    # Do not ask questions
-    POETRY_NO_INTERACTION=1 \
-    # Put .venv inside source folder
-    POETRY_VIRTUALENVS_IN_PROJECT=1 \
-    # Cache of poetry
-    POETRY_CACHE_DIR=/tmp/poetry_cache
+  PATH="/home/${USER}/.local/bin:${PATH}" \
+  PYTHONPATH="." \
+  WEB_CONCURRENCY=1 \
+  # Do not buffer `stdout`
+  PYTHONUNBUFFERED=1 \
+  # Do not create `.pyc` files
+  PYTHONDONTWRITEBYTECODE=1 \
+  # Do not ask questions
+  POETRY_NO_INTERACTION=1 \
+  # Put .venv inside source folder
+  POETRY_VIRTUALENVS_IN_PROJECT=1 \
+  # Cache of poetry
+  POETRY_CACHE_DIR=/tmp/poetry_cache
 
 # install Poetry
 RUN pip3 install --break-system-packages --no-cache-dir poetry==1.6.1
@@ -67,9 +67,9 @@ RUN pip3 install --break-system-packages --no-cache-dir poetry==1.6.1
 # copy source code
 COPY invitation ${WORKDIR}/invitation
 COPY poetry.lock \
-     pyproject.toml \
-     README.md \
-     ${WORKDIR}/
+  pyproject.toml \
+  README.md \
+  ${WORKDIR}/
 
 # install dependencies
 RUN poetry install --only main
