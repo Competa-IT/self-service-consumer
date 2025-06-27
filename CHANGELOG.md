@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.17.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/compare/v0.16.1...v0.17.0) (2025-06-27)
+
+
+### Features
+
+* Add "checksum/secret" into deployment ([9158ac4](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/commit/9158ac478435bee2569b3abc18e6a084da1d2b09)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* Add owner role support to the provisioning API secret ([c5dda1e](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/commit/c5dda1e9717f1336c94e34fe6261ffec19cef070)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* Adjust provisioning api client configuration to common secrets handling ([770fa9e](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/commit/770fa9e116f42b2cd7b59f59664a7b68a67ad3c5)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* Adjust UMC client configuration to meet common structure ([412b631](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/commit/412b631a14cb5dc8025534a7776c8eebe6242a2e)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* Correct handling of labels and annotations to meet common behavior ([5e5535b](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/commit/5e5535b64fc5174239372644b60bfe4f55fa8e1e)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* Ensure stable secret value generation across versions ([f970fff](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/commit/f970fff755be8cc875be9aedfdd9780208107c28)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* Image pull policy configuration via "image.pullPolicy" ([34c211e](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/commit/34c211ec05e708ec65f14f48ed8b97e20148c9da)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* Update dependency nubus-common ([acf6787](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/commit/acf678716c335c828e536b7f8f3d373f17a09084)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* Update generated files ([4391106](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/commit/43911060d0a3a872dcb169fffbf1a1e1bc37ed28)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+
+
+### Bug Fixes
+
+* Avoid setting a value for imagePullPolicy by default ([e4f3a88](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/commit/e4f3a88ae31afd4bf62f2d7d9c9d67b65f409785)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* Correct "request_prefill" parameter in the provisioning api registration ([cbee361](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/commit/cbee361f2f441368e5d1ddc7822126c31b07490e)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+
 ## [0.16.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/compare/v0.16.0...v0.16.1) (2025-06-23)
 
 
