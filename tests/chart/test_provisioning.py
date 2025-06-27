@@ -18,7 +18,7 @@ class TestAuth(SecretViaEnv, AuthPasswordOwner, Auth):
     secret_name = "release-name-selfservice-consumer-provisioning-api"
 
     default_username = "selfservice"
-    derived_password = "46dc2d43d2cfb31b484b3ded24376b13be696924"
+    derived_password = "827fe91a427f833a5f1895003679545d49d4d81d"
 
 
 class TestAuthRegistration(AuthPasswordSecret):
