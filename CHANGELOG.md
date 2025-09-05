@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.19.5](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/compare/v0.19.4...v0.19.5) (2025-09-05)
+
+
+### Bug Fixes
+
+* **deps:** Update gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base Docker tag to v5.2.2-build.20250904 ([b1bc2e3](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/commit/b1bc2e3f9cee5efbec4e517d6322ba7538c41507)), closes [#0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/issues/0)
+
 ## [0.19.4](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/compare/v0.19.3...v0.19.4) (2025-08-28)
 
 
