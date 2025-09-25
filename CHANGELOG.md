@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.19.14](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/compare/v0.19.13...v0.19.14) (2025-09-25)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.44.8 ([b12f15d](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/commit/b12f15dfac7e1b5d66d321ad418c959f1ed23430)), closes [#0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/issues/0)
+
 ## [0.19.13](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/compare/v0.19.12...v0.19.13) (2025-09-24)
 
 
