@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.19.15](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/compare/v0.19.14...v0.19.15) (2025-09-25)
+
+
+### Bug Fixes
+
+* Automated kyverno tests ([f837aa8](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/commit/f837aa85b4186aa72d07b0968a409c1d44c9d455)), closes [univention/dev/internal/team-nubus#1426](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1426)
+
 ## [0.19.14](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/compare/v0.19.13...v0.19.14) (2025-09-25)
 
 
