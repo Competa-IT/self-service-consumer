@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/compare/v0.19.39...v0.20.0) (2025-12-09)
+
+
+### Features
+
+* **helm:** Add component-specific extrEnvVars support ([26a083b](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/commit/26a083b3f37d81447e268c9e73edd5cca851ca24)), closes [univention/dev/internal/team-nubus#977](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/977)
+
 ## [0.19.39](https://git.knut.univention.de/univention/dev/nubus-for-k8s/self-service-consumer/compare/v0.19.38...v0.19.39) (2025-12-03)
 
 
